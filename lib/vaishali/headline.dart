@@ -15,7 +15,9 @@ class HeaderRowState extends State<HeaderRow> {
       title: MyLink('HeadLines go here'),
       subtitle: Text('Mon Jun 15 2020 09:39:37  | The Hindu - News |'),
       trailing: IconButton(
+          tooltip: 'Review article',
           icon: Icon(Icons.done_outline),
+          highlightColor: (isPressed) ? Color(0x6600AA00) : Color(0x669A9A9A),
           color: (isPressed) ? Color(0xff00AA00) : Color(0xff9A9A9A),
           onPressed: () {
             setState(() {
@@ -39,6 +41,7 @@ class MyLink extends StatelessWidget {
           decoration: TextDecoration.underline,
           color: Colors.blue[700],
           fontWeight: FontWeight.bold,
+          fontSize: 20.0,
         ),
       ),
     );

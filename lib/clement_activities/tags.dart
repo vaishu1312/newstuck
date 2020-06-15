@@ -10,7 +10,6 @@ class TagBuild extends StatefulWidget {
 }
 
 class _TagBuild extends State<TagBuild> {
-
   var eduSelected = false;
   var polSelected = false;
   var covSelected = false;
@@ -19,34 +18,33 @@ class _TagBuild extends State<TagBuild> {
   var ecoSelected = false;
   final RoundedLoadingButtonController _btnController1 =
       new RoundedLoadingButtonController();
-      final RoundedLoadingButtonController _btnController2 =
+  final RoundedLoadingButtonController _btnController2 =
       new RoundedLoadingButtonController();
-      final RoundedLoadingButtonController _btnController3 =
+  final RoundedLoadingButtonController _btnController3 =
       new RoundedLoadingButtonController();
-      final RoundedLoadingButtonController _btnController4 =
+  final RoundedLoadingButtonController _btnController4 =
       new RoundedLoadingButtonController();
-      final RoundedLoadingButtonController _btnController5 =
+  final RoundedLoadingButtonController _btnController5 =
       new RoundedLoadingButtonController();
-      final RoundedLoadingButtonController _btnController6 =
+  final RoundedLoadingButtonController _btnController6 =
       new RoundedLoadingButtonController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: GridView.count(
-          crossAxisCount: 3,
-          padding: EdgeInsets.all(50),
+      crossAxisCount: 3,
+      padding: EdgeInsets.all(50),
       children: [
         RoundedLoadingButton(
-          
           width: 100,
           color: eduSelected ? Colors.green : Colors.red,
           child: Text('Education', style: TextStyle(color: Colors.white)),
           controller: _btnController1,
-          onPressed: (){
+          onPressed: () {
             setState(() {
               eduSelected = !eduSelected;
             });
-              tagEdu("Education",_btnController1);
+            tagEdu("Education", _btnController1);
           },
         ),
         RoundedLoadingButton(
@@ -54,11 +52,11 @@ class _TagBuild extends State<TagBuild> {
           width: 100,
           child: Text('Politics', style: TextStyle(color: Colors.white)),
           controller: _btnController2,
-          onPressed: (){
+          onPressed: () {
             setState(() {
               polSelected = !polSelected;
             });
-              tagEdu("Education",_btnController2);
+            tagEdu("Education", _btnController2);
           },
         ),
         RoundedLoadingButton(
@@ -66,11 +64,11 @@ class _TagBuild extends State<TagBuild> {
           width: 100,
           child: Text('COVID-19', style: TextStyle(color: Colors.white)),
           controller: _btnController3,
-          onPressed: (){
+          onPressed: () {
             setState(() {
               covSelected = !covSelected;
             });
-              tagEdu("Education",_btnController3);
+            tagEdu("Education", _btnController3);
           },
         ),
         RoundedLoadingButton(
@@ -78,11 +76,11 @@ class _TagBuild extends State<TagBuild> {
           width: 100,
           child: Text('Chennai', style: TextStyle(color: Colors.white)),
           controller: _btnController4,
-          onPressed: (){
+          onPressed: () {
             setState(() {
               cheSelected = !cheSelected;
             });
-              tagEdu("Education",_btnController4);
+            tagEdu("Education", _btnController4);
           },
         ),
         RoundedLoadingButton(
@@ -90,11 +88,11 @@ class _TagBuild extends State<TagBuild> {
           width: 100,
           child: Text('Tamilnadu', style: TextStyle(color: Colors.white)),
           controller: _btnController5,
-          onPressed: (){
+          onPressed: () {
             setState(() {
               tnSelected = !tnSelected;
             });
-              tagEdu("Education",_btnController5);
+            tagEdu("Education", _btnController5);
           },
         ),
         RoundedLoadingButton(
@@ -102,28 +100,26 @@ class _TagBuild extends State<TagBuild> {
           width: 100,
           child: Text('Economy', style: TextStyle(color: Colors.white)),
           controller: _btnController6,
-          onPressed: (){
+          onPressed: () {
             setState(() {
               ecoSelected = !ecoSelected;
             });
-              tagEdu("Education",_btnController6);
+            tagEdu("Education", _btnController6);
           },
         ),
       ],
     ));
   }
 
-  void tagEdu(String tag,RoundedLoadingButtonController controller) async {
+  void tagEdu(String tag, RoundedLoadingButtonController controller) async {
     Timer(Duration(seconds: 1), () {
       controller.reset();
       // controller.reset();
-    //   Timer(Duration(seconds: 2), () {
-    //   controller.reset();
-    //   // controller.reset();
-      
-    // });
-      
+      //   Timer(Duration(seconds: 2), () {
+      //   controller.reset();
+      //   // controller.reset();
+
+      // });
     });
-    
   }
 }

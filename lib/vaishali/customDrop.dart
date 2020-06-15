@@ -205,6 +205,22 @@ class DropDownState extends State<DropDown> {
                   onTap: () {
                     widget.collapse(widget.options[7]);
                     showDatePicker(
+                            builder: (BuildContext context, Widget child) {
+                              return Theme(
+                                
+                                data: ThemeData.light().copyWith(
+                                    colorScheme: ColorScheme.light(
+                                        primary: Color(0xFF9a2424)),
+                                    buttonTheme: ButtonThemeData(
+                                        textTheme: ButtonTextTheme
+                                            .primary), //OK/Cancel button text color
+                                    primaryColor: Color(0xFF9a2424), //Head background
+                                    accentColor: Color(0xFF9a2424), //selection color
+                                    //dialogBackgroundColor: Colors.white,//Background color
+                                    ),
+                                child: child,
+                              );
+                            },
                             context: context,
                             initialDate: DateTime.now(),
                             firstDate: DateTime(2001),

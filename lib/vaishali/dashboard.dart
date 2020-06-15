@@ -4,8 +4,8 @@ import 'package:newstuck/vaishali/appBar.dart';
 import 'package:newstuck/vaishali/toggle.dart';
 import 'package:newstuck/vaishali/customDrop.dart';
 import 'package:newstuck/vaishali/headline.dart';
-//import 'package:newstuck/clement_activities/ranks.dart';
-//import 'package:newstuck/clement_activities/tags.dart;
+import 'package:newstuck/clement_activities/ranks.dart';
+import 'package:newstuck/clement_activities/tags.dart';
 
 class MyDashBoard extends StatefulWidget {
   MyDashBoard({Key key, this.title}) : super(key: key);
@@ -65,9 +65,10 @@ class MyDashBoardState extends State<MyDashBoard> {
                           padding: EdgeInsets.all(5.0),
                           child: Column(
                             children: [
-                              Expanded(flex: 1, child: HeaderRow()),
-                              Expanded(flex: 1, child: HeaderRow()),
-                              Expanded(flex: 1, child: HeaderRow()),
+                              HeaderRow(),
+                              //Expanded(flex: 1, child: HeaderRow()),
+                              Expanded(flex: 1, child: rankBar()),
+                              Expanded(flex: 1, child: TagBuild()),
                               //rankBar(),
                               //TagBuild(),
                             ],
