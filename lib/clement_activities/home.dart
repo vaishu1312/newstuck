@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:newstuck/vaishali/dashboard.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -25,7 +26,7 @@ class _Home extends State<Home> {
     map["password"] = "";
   }
 
-  final uri = "http://104.211.200.236:8080/Users/Login";
+  final uri = "http://localhost:5000/Users/Login";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +42,7 @@ class _Home extends State<Home> {
         backgroundColor: new Color(0xff9a2424),
       ),
       body: Builder(
-        builder: (context) => SingleChildScrollView(
+        builder: (context1) => SingleChildScrollView(
           child: Center(
               child: Container(
             margin: EdgeInsets.all(20),
@@ -119,7 +120,17 @@ class _Home extends State<Home> {
                 Padding(
                   padding: const EdgeInsets.all(50),
                   child: OutlineButton(
-                    onPressed: () => {login(context)},
+                    onPressed: () {
+                      login(context1, context).then((value) {
+                        print(value);
+                        if (value) {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => MyDashBoard()),
+                              (Route<dynamic> route) => false);
+                        }
+                      });
+                    },
                     child: Text("Login"),
                     highlightedBorderColor: new Color(0xff9a2424),
                     highlightColor: new Color(0xff9a2424),
@@ -127,8 +138,6 @@ class _Home extends State<Home> {
                 ),
               ],
             )),
-            
-            
             decoration: const BoxDecoration(
               border: Border(
                 top: BorderSide(width: 1.0, color: Color(0xff9a2424)),
@@ -143,7 +152,7 @@ class _Home extends State<Home> {
     );
   }
 
-  void login(BuildContext context) async {
+  Future<bool> login(BuildContext context, BuildContext screenContext) async {
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Accept': 'application/json'
@@ -175,13 +184,16 @@ class _Home extends State<Home> {
             pass_error = true;
           });
         }
+        return false;
       } else if (user["message"] != null) {
         Scaffold.of(context).showSnackBar(SnackBar(
           content: Text('Invalid Credentials'),
         ));
-      } else {
-        print(user);
+        return false;
       }
+    } else {
+      print(user);
+      return true;
     }
   }
 }
