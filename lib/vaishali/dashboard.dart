@@ -58,7 +58,7 @@ class MyDashBoardState extends State<MyDashBoard> {
               itemCount: 4,
               itemBuilder: (context, index) {
                 return Container(
-                  height: h - CustomAppBar().preferredSize.height - (h * 0.15),
+                  height: h - CustomAppBar().preferredSize.height - (h * 0.10),
                   child: Card(
                       margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
                       child: Padding(

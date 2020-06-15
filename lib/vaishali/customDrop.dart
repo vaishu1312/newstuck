@@ -74,29 +74,28 @@ class _CustomDropdownState extends State<CustomDropdown> {
         });
       },
       child: Container(
-        width: MediaQuery.of(context).size.width*0.4,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Color(0xFF9a2424),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                text.toUpperCase(),
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold),
-              ),
-              Icon(
-                Icons.arrow_drop_down,
-                color: Colors.white,
-              ),
-            ],
-          ),
-        
+        width: MediaQuery.of(context).size.width * 0.4,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Color(0xFF9a2424),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              text.toUpperCase(),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold),
+            ),
+            Icon(
+              Icons.arrow_drop_down,
+              color: Colors.white,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -124,7 +123,6 @@ class DropDown extends StatefulWidget {
 }
 
 class DropDownState extends State<DropDown> {
-  
   @override
   Widget build(BuildContext context) {
     return Column(

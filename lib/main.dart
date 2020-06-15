@@ -5,8 +5,8 @@ import 'package:newstuck/vaishali/dashboard.dart';
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: MyDashBoard(),
-    //home:Home(),
+    home:Home(),
+    //home:MyDashBoard(),
   ));
 }
 
