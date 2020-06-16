@@ -26,12 +26,12 @@ class HeaderRowState extends State<HeaderRow> {
   @override
   Widget build(BuildContext context) {
 
-    /*return Column(
+    return Column(
       //mainAxisSize: MainAxisSize.min,
       children: [
         ListTile(
-            title: MyLink('HeadLines go here'),
-            subtitle: Text('Mon Jun 15 2020 09:39:37  | The Hindu - News |'),
+            title: MyLink(feedItem["title"],feedItem["href"]),
+            subtitle: Text(feedItem["publishDate"]+" | "+feedItem["category"]),
             trailing: ClipOval(
               child: Material(
                 color: (isPressed)
@@ -60,11 +60,11 @@ class HeaderRowState extends State<HeaderRow> {
             ? SizedBox(height: 200.0, child: TagBuild())
             : Container(height: 0),
       ],
-      );*/
+      );
 
-    return ListTile(
-        title: MyLink(feedItem["title"]),
-        subtitle: Text('Mon Jun 15 2020 09:39:37  | The Hindu - News |'),
+    /*return ListTile(
+        title: MyLink(feedItem["title"],feedItem["href"]),
+        subtitle: Text(feedItem["publishDate"]+" | "+feedItem["category"]),
         trailing: ClipOval(
           child: Material(
             color: (isPressed)
@@ -95,13 +95,14 @@ class HeaderRowState extends State<HeaderRow> {
             });
           }),*/      
         
-    );
+    );*/
   }
 }
 
 class MyLink extends StatelessWidget {
-  MyLink(this.val);
+  MyLink(this.val,this.url);
   final String val;
+  final String url;
   @override
   Widget build(BuildContext context) {
     return FittedBox(
@@ -110,7 +111,7 @@ class MyLink extends StatelessWidget {
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (BuildContext context) =>
-                  MyWebView('https://www.thehindu.com/')));
+                  MyWebView(url)));
         },
         child: Text(
           val,
@@ -118,7 +119,7 @@ class MyLink extends StatelessWidget {
             decoration: TextDecoration.underline,
             color: Colors.blue[700],
             fontWeight: FontWeight.bold,
-            fontSize: 20.0,
+            fontSize: 16.0,
           ),
         ),
       ),

@@ -83,10 +83,10 @@ class MyDashBoardState extends State<MyDashBoard> {
                   child: Card(
 
                     //child: ExpandRow(),
-                   /* child: HeaderRow(),
-                  ),*/
+                    child: HeaderRow(feedItems[index]),
+                  ),
 
-                      margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
+                      /*margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
                       child: Padding(
                           padding: EdgeInsets.all(5.0),
                           child: Column(
@@ -98,7 +98,7 @@ class MyDashBoardState extends State<MyDashBoard> {
                               //rankBar(),
                               //TagBuild(),
                             ],
-                          ))),
+                          ))),*/
                 );
               },
             ),
