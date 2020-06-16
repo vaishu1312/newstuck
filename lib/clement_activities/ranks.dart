@@ -28,13 +28,16 @@ class _rankBar extends State<rankBar> {
   String factsvsopinion = "None";
 
   Widget build(BuildContext context) {
-    return  Wrap(children: [
+    return  Flex(
+      direction: Axis.vertical,
+      children: [
+      
         Container(
-          padding: EdgeInsets.all(20),
+          // padding: EdgeInsets.all(20),
           child: Row(
             children: [
               Container(
-                width: 200,
+                width: 170,
                 child: Text('Competency',
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -72,11 +75,11 @@ class _rankBar extends State<rankBar> {
           ),
         ),
         Container(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.only(top:20),
           child: Row(
             children: [
               Container(
-                width: 200,
+                width: 170,
                 child: Text('TrustWorthiness',
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -115,11 +118,11 @@ class _rankBar extends State<rankBar> {
           ),
         ),
         Container(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.only(top : 20),
           child: Row(
             children: [
               Container(
-                width: 200,
+                width: 170,
                 child: Text('FactVsOpinion',
                     textAlign: TextAlign.center,
                     style: TextStyle(
