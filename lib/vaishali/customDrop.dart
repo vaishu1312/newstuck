@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-//import 'package:newstuck/vaishali/datePicker.dart';
-//import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class CustomDropdown extends StatefulWidget {
   @override
@@ -76,23 +74,22 @@ class _CustomDropdownState extends State<CustomDropdown> {
         });
       },
       child: Container(
-        width: 160.0,
-        height: 35.0,
+        width: MediaQuery.of(context).size.width * 0.4,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Color(0xFF9a2424),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
               text.toUpperCase(),
               style: TextStyle(
                   color: Colors.white,
-                  fontSize: 12,
+                  fontSize: 13,
                   fontWeight: FontWeight.bold),
             ),
-            Spacer(),
             Icon(
               Icons.arrow_drop_down,
               color: Colors.white,
@@ -126,42 +123,6 @@ class DropDown extends StatefulWidget {
 }
 
 class DropDownState extends State<DropDown> {
-  /* GlobalKey actionKey;
-  double height, width, xPosition, yPosition;
-  OverlayEntry datePicker;
-  String _date="";
-
-  @override
-  void initState() {
-    actionKey = LabeledGlobalKey('dropdownState');
-    super.initState();
-  }
-
-  void findDropdownData() {
-    RenderBox renderBox = actionKey.currentContext.findRenderObject();
-    height = renderBox.size.height;
-    width = renderBox.size.width;
-    Offset offset = renderBox.localToGlobal(Offset.zero);
-    xPosition = offset.dx;
-    yPosition = offset.dy;
-    print(height);
-    print(width);
-    print(xPosition);
-    print(yPosition);
-  }
-
-  OverlayEntry _createdatePicker() {
-    return OverlayEntry(builder: (context) {
-      return Positioned(
-        left: xPosition,
-        width: width,
-        top: yPosition + height,
-        height: height,
-        child: MyDatePicker(height),
-      );
-    });
-  }*/
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -170,7 +131,6 @@ class DropDownState extends State<DropDown> {
           height: 5,
         ),
         Material(
-          //elevation: 20,
           child: Container(
             height: 8 * widget.itemHeight,
             decoration: BoxDecoration(
@@ -245,6 +205,22 @@ class DropDownState extends State<DropDown> {
                   onTap: () {
                     widget.collapse(widget.options[7]);
                     showDatePicker(
+                            builder: (BuildContext context, Widget child) {
+                              return Theme(
+                                
+                                data: ThemeData.light().copyWith(
+                                    colorScheme: ColorScheme.light(
+                                        primary: Color(0xFF9a2424)),
+                                    buttonTheme: ButtonThemeData(
+                                        textTheme: ButtonTextTheme
+                                            .primary), //OK/Cancel button text color
+                                    primaryColor: Color(0xFF9a2424), //Head background
+                                    accentColor: Color(0xFF9a2424), //selection color
+                                    //dialogBackgroundColor: Colors.white,//Background color
+                                    ),
+                                child: child,
+                              );
+                            },
                             context: context,
                             initialDate: DateTime.now(),
                             firstDate: DateTime(2001),
@@ -258,9 +234,6 @@ class DropDownState extends State<DropDown> {
                       print(d);
                       widget.changeText(d);
                     });
-                    /*findDropdownData();
-                    datePicker = _createdatePicker();
-                    Overlay.of(context).insert(datePicker);*/
                   },
                   child: DropDownItem.last(
                     text: widget.options[7],
@@ -324,7 +297,7 @@ class DropDownItem extends StatelessWidget {
           Text(
             text.toUpperCase(),
             style: TextStyle(
-                color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
           ),
         ],
       ),
