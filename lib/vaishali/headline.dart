@@ -12,9 +12,21 @@ class HeaderRowState extends State<HeaderRow> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: MyLink('HeadLines go here'),
-      subtitle: Text('Mon Jun 15 2020 09:39:37  | The Hindu - News |'),
-      trailing: IconButton(
+        title: MyLink('HeadLines go here'),
+        subtitle: Text('Mon Jun 15 2020 09:39:37  | The Hindu - News |'),
+        trailing: ClipOval(
+          child: Material(
+            color: (isPressed) ? Color(0xff00AA00) : Color(0xff9A9A9A), // button color
+            child: InkWell(
+              splashColor: (isPressed) ? Color(0x6600AA00) : Color(0x669A9A9A), // inkwell color
+              child: SizedBox(width: 56, height: 56, child: Icon(Icons.done_outline)),
+              onTap: () {setState(() {
+              isPressed = !isPressed;
+            });},
+            ),
+          ),
+        )
+        /*trailing: IconButton(
           tooltip: 'Review article',
           icon: Icon(Icons.done_outline),
           highlightColor: (isPressed) ? Color(0x6600AA00) : Color(0x669A9A9A),
@@ -23,8 +35,8 @@ class HeaderRowState extends State<HeaderRow> {
             setState(() {
               isPressed = !isPressed;
             });
-          }),
-    );
+          }),*/
+        );
   }
 }
 
