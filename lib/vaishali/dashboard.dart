@@ -4,9 +4,7 @@ import 'package:newstuck/vaishali/appBar.dart';
 import 'package:newstuck/vaishali/toggle.dart';
 import 'package:newstuck/vaishali/customDrop.dart';
 import 'package:newstuck/vaishali/headline.dart';
-import 'package:newstuck/vaishali/expand.dart';
-import 'package:newstuck/clement_activities/ranks.dart';
-import 'package:newstuck/clement_activities/tags.dart';
+//import 'package:newstuck/vaishali/expand.dart';
 
 class MyDashBoard extends StatefulWidget {
   MyDashBoard({Key key, this.title}) : super(key: key);
@@ -17,7 +15,6 @@ class MyDashBoard extends StatefulWidget {
 }
 
 class MyDashBoardState extends State<MyDashBoard> {
-  
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -64,7 +61,8 @@ class MyDashBoardState extends State<MyDashBoard> {
                   padding: EdgeInsets.all(10.0),
                   color: Color(0xFF9a2424),
                   child: Card(
-                    child: ExpandRow(),
+                    //child: ExpandRow(),
+                    child: HeaderRow(),
                   ),
                 );
               },

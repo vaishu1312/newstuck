@@ -29,8 +29,7 @@ class _Home extends State<Home> {
   }
 
 
-  //final uri = "http://localhost:60395/Users/Login";
-  final uri =  returnDomain()+"Users/Login";
+ final uri =  returnDomain()+"Users/Login";
   @override
   Widget build(BuildContext context) {
     return Scaffold(

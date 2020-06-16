@@ -30,30 +30,32 @@ class _TagBuild extends State<TagBuild> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        padding: EdgeInsets.only(left: 10),
-        itemCount: tagItems.length,
-        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          
-          return Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: RoundedLoadingButton(
-              width: 100,
-              color: tagSelected[index] ? Colors.green : Colors.red,
-              child: Text(tagItems[index]["tagName"],
-                  style: TextStyle(color: Colors.white)),
-              controller: roundButtonController[index],
-              onPressed: () {
-                setState(() {
-                  tagSelected[index] = !tagSelected[index];
-                });
-                tagEdu(tagItems[index]["tagName"], roundButtonController[index]);
-              },
-            ),
-          );
-        });
+    return   ListView.builder(
+            padding: EdgeInsets.only(left: 10),
+            itemCount: tagItems.length,
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              
+              return Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: RoundedLoadingButton(
+                  width: 100,
+                  color: tagSelected[index] ? Colors.green : Colors.red,
+                  child: Text(tagItems[index]["tagName"],
+                      style: TextStyle(color: Colors.white)),
+                  controller: roundButtonController[index],
+                  onPressed: () {
+                    setState(() {
+                      tagSelected[index] = !tagSelected[index];
+                    });
+                    tagEdu(tagItems[index]["tagName"], roundButtonController[index]);
+                  },
+                ),
+              );
+            }
+    );
+    
   }
 
   void tagEdu(String tag, RoundedLoadingButtonController controller) async {

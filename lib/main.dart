@@ -6,8 +6,6 @@ void main() {
   
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-
-    //home:MyDashBoard(),
     home: Home(),
 
   ));

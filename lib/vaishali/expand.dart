@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:newstuck/vaishali/webview.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:newstuck/clement_activities/ranks.dart';
 import 'package:newstuck/clement_activities/tags.dart';
 
@@ -21,8 +20,12 @@ class ExpandRowState extends State<ExpandRow> {
           color: isExpanded ? Colors.green : Colors.grey),
       //backgroundColor: Colors.pink,
       children: [
-        rankBar(),
-        TagBuild(),
+        Column(
+          children: [
+            SizedBox(height:200.0,child:rankBar()),
+            SizedBox(height:200.0,child:TagBuild())
+          ],
+        ),
       ],
       onExpansionChanged: (value) {
         //call to api
@@ -60,12 +63,4 @@ class MyLink extends StatelessWidget {
     );
   }
 
-  launchURL() async {
-    const url = 'https://www.thehindu.com/';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 }

@@ -41,58 +41,60 @@ class _rankBar extends State<rankBar> {
   }
 
   Widget build(BuildContext context) {
-    return ListView.separated(
-      separatorBuilder: (context, index) => Divider(
-              color: Colors.black,
-            ),
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: feedItems.length,
-      itemBuilder: (context, index) {
-        return Container(
-          padding: EdgeInsets.all(20),
-          child: Row(
-            children: [
-              Container(
-                width: 200,
-                child: Text(feedItems[index]["dimensionName"],
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        color: new Color(0xff9a2424),
-                        fontFamily: 'Lobster')),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 1),
-                decoration: BoxDecoration(
-                    color: Colors.yellowAccent,
-                    borderRadius: BorderRadius.circular(30)),
+    return
+            ListView.separated(
+        separatorBuilder: (context, index) => Divider(
+                  color: Colors.black,
+                ),
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: feedItems.length,
+        itemBuilder: (context, index) {
+          return Container(
+              padding: EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Container(
+                    width: 200,
+                    child: Text(feedItems[index]["dimensionName"],
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            color: new Color(0xff9a2424),
+                            fontFamily: 'Lobster')),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+                    decoration: BoxDecoration(
+                        color: Colors.yellowAccent,
+                        borderRadius: BorderRadius.circular(30)),
 
-                // dropdown below..
-                child: DropdownButton<String>(
-                    value: itemValue[index],
-                    icon: Icon(Icons.arrow_drop_down),
-                    iconSize: 42,
-                    underline: SizedBox(),
-                    onChanged: (String newValue) {
-                      setState(() {
-                        itemValue[index] = newValue;
-                      });
-                    },
-                    items: competencyList
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList()),
-              )
-            ],
-          ),
-        );
-      },
-    );
+                    // dropdown below..
+                    child: DropdownButton<String>(
+                        value: itemValue[index],
+                        icon: Icon(Icons.arrow_drop_down),
+                        iconSize: 42,
+                        underline: SizedBox(),
+                        onChanged: (String newValue) {
+                          setState(() {
+                            itemValue[index] = newValue;
+                          });
+                        },
+                        items: competencyList
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList()),
+                  )
+                ],
+              ),
+          );
+        },
+
+           );
   }
 
   void getRanks() async {
