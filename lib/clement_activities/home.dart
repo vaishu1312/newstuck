@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:newstuck/clement_activities/const.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:newstuck/vaishali/dashboard.dart';
 
 class Home extends StatefulWidget {
@@ -26,7 +28,7 @@ class _Home extends State<Home> {
     map["password"] = "";
   }
 
-  final uri = "http://localhost:5000/Users/Login";
+  final uri =  returnDomain()+"Users/Login";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -171,7 +173,7 @@ class _Home extends State<Home> {
     http.Response response = await http.post(uri,
         body: json.encode(map), headers: {'Content-type': 'application/json'});
     user = json.decode(response.body);
-    print(user);
+    // print(user);
     if (response.statusCode == 400) {
       if (user["errors"] != null) {
         if (user["errors"]["Username"] != null &&
@@ -203,7 +205,9 @@ class _Home extends State<Home> {
         return false;
       }
     } else {
-      print(user);
+      // print(user);
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString("token",user["token"]);
       return true;
     }
     return false;
