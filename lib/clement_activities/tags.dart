@@ -1,7 +1,10 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
+import 'package:http/http.dart' as http;
+import 'package:newstuck/clement_activities/const.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TagBuild extends StatefulWidget {
   _TagBuild createState() {
@@ -16,107 +19,41 @@ class _TagBuild extends State<TagBuild> {
   var cheSelected = false;
   var tnSelected = false;
   var ecoSelected = false;
-  final RoundedLoadingButtonController _btnController1 =
-      new RoundedLoadingButtonController();
-  final RoundedLoadingButtonController _btnController2 =
-      new RoundedLoadingButtonController();
-  final RoundedLoadingButtonController _btnController3 =
-      new RoundedLoadingButtonController();
-  final RoundedLoadingButtonController _btnController4 =
-      new RoundedLoadingButtonController();
-  final RoundedLoadingButtonController _btnController5 =
-      new RoundedLoadingButtonController();
-  final RoundedLoadingButtonController _btnController6 =
-      new RoundedLoadingButtonController();
+  var tagItems = new List<dynamic>();
+  var tagSelected;
+  var roundButtonController;
+
+  void initState() {
+    super.initState();
+    getTags();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return  Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            RoundedLoadingButton(
+    return ListView.builder(
+        padding: EdgeInsets.only(left: 10),
+        itemCount: tagItems.length,
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          
+          return Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: RoundedLoadingButton(
               width: 100,
-              color: eduSelected ? Colors.green : Colors.red,
-              child: Text('Education', style: TextStyle(color: Colors.white)),
-              controller: _btnController1,
+              color: tagSelected[index] ? Colors.green : Colors.red,
+              child: Text(tagItems[index]["tagName"],
+                  style: TextStyle(color: Colors.white)),
+              controller: roundButtonController[index],
               onPressed: () {
                 setState(() {
-                  eduSelected = !eduSelected;
+                  tagSelected[index] = !tagSelected[index];
                 });
-                tagEdu("Education", _btnController1);
+                tagEdu(tagItems[index]["tagName"], roundButtonController[index]);
               },
             ),
-            RoundedLoadingButton(
-              color: polSelected ? Colors.green : Colors.red,
-              width: 100,
-              child: Text('Politics', style: TextStyle(color: Colors.white)),
-              controller: _btnController2,
-              onPressed: () {
-                setState(() {
-                  polSelected = !polSelected;
-                });
-                tagEdu("Education", _btnController2);
-              },
-            ),
-            RoundedLoadingButton(
-              color: covSelected ? Colors.green : Colors.red,
-              width: 100,
-              child: Text('COVID-19', style: TextStyle(color: Colors.white)),
-              controller: _btnController3,
-              onPressed: () {
-                setState(() {
-                  covSelected = !covSelected;
-                });
-                tagEdu("Education", _btnController3);
-              },
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            RoundedLoadingButton(
-              color: cheSelected ? Colors.green : Colors.red,
-              width: 100,
-              child: Text('Chennai', style: TextStyle(color: Colors.white)),
-              controller: _btnController4,
-              onPressed: () {
-                setState(() {
-                  cheSelected = !cheSelected;
-                });
-                tagEdu("Education", _btnController4);
-              },
-            ),
-            RoundedLoadingButton(
-              color: tnSelected ? Colors.green : Colors.red,
-              width: 100,
-              child: Text('Tamilnadu', style: TextStyle(color: Colors.white)),
-              controller: _btnController5,
-              onPressed: () {
-                setState(() {
-                  tnSelected = !tnSelected;
-                });
-                tagEdu("Education", _btnController5);
-              },
-            ),
-            RoundedLoadingButton(
-              color: ecoSelected ? Colors.green : Colors.red,
-              width: 100,
-              child: Text('Economy', style: TextStyle(color: Colors.white)),
-              controller: _btnController6,
-              onPressed: () {
-                setState(() {
-                  ecoSelected = !ecoSelected;
-                });
-                tagEdu("Education", _btnController6);
-              },
-            ),
-          ],
-        ),
-      ],
-    );
+          );
+        });
   }
 
   void tagEdu(String tag, RoundedLoadingButtonController controller) async {
@@ -129,5 +66,31 @@ class _TagBuild extends State<TagBuild> {
 
       // });
     });
+  }
+
+  void getTags() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    String token = prefs.getString("token");
+    print(token);
+    Map<String, String> requestHeaders = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      "Authorization": "Bearer " + token
+    };
+    http.Response response = await http
+        .get(returnDomain() + "api/Feed/GetFeedTags", headers: requestHeaders);
+    if (response.statusCode == 200) {
+      setState(() {
+        tagItems = json.decode(response.body);
+        tagSelected = List<bool>.generate(tagItems.length, (index) => false);
+        roundButtonController =
+            new List<RoundedLoadingButtonController>.generate(tagItems.length,
+                (index) => new RoundedLoadingButtonController());
+      });
+    }
+    //
+    print("Hello");
+    print(tagItems);
   }
 }
