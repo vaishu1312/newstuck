@@ -4,6 +4,7 @@ import 'package:newstuck/vaishali/appBar.dart';
 import 'package:newstuck/vaishali/toggle.dart';
 import 'package:newstuck/vaishali/customDrop.dart';
 import 'package:newstuck/vaishali/headline.dart';
+import 'package:newstuck/vaishali/expand.dart';
 import 'package:newstuck/clement_activities/ranks.dart';
 import 'package:newstuck/clement_activities/tags.dart';
 
@@ -58,21 +59,12 @@ class MyDashBoardState extends State<MyDashBoard> {
               itemCount: 4,
               itemBuilder: (context, index) {
                 return Container(
-                  height: h - CustomAppBar().preferredSize.height - (h * 0.10),
+                  //height: h - CustomAppBar().preferredSize.height - (h * 0.15),
+                  padding: EdgeInsets.all(10.0),
+                  color: Color(0xFF9a2424),
                   child: Card(
-                      margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-                      child: Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Column(
-                            children: [
-                              HeaderRow(),
-                              //Expanded(flex: 1, child: HeaderRow()),
-                              Expanded(flex: 1, child: rankBar()),
-                              Expanded(flex: 1, child: TagBuild()),
-                              //rankBar(),
-                              //TagBuild(),
-                            ],
-                          ))),
+                    child: ExpandRow(),
+                  ),
                 );
               },
             ),
