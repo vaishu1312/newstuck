@@ -208,6 +208,7 @@ class _Home extends State<Home> {
     } else {
       // print(user);
       final prefs = await SharedPreferences.getInstance();
+      prefs.setString("u_id",user["id"]);
       prefs.setString("token",user["token"]);
       return true;
     }

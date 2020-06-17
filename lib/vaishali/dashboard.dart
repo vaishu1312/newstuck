@@ -5,7 +5,8 @@ import 'package:newstuck/vaishali/toggle.dart';
 import 'dart:convert';
 import 'package:newstuck/vaishali/customDrop.dart';
 import 'package:newstuck/vaishali/headline.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 //import 'package:newstuck/vaishali/expand.dart';
 
 import 'package:newstuck/clement_activities/ranks.dart';
@@ -130,8 +131,9 @@ class MyDashBoardState extends State<MyDashBoard> {
    
     if (isToggleSelected){
       print("new feed");
+      String uid=prefs.getString("u_id");
        response = await http.get(
-          returnDomain() + "api/Feed/GetReviewedArticles",
+          returnDomain() + "api/Feed/GetReviewedArticles?SelectedArticles=true&UserId="+uid,
           headers: requestHeaders);
     }
     else{
