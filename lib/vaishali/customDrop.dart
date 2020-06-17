@@ -1,6 +1,15 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:newstuck/clement_activities/const.dart';
+import 'package:newstuck/clement_activities/filters.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 class CustomDropdown extends StatefulWidget {
+  final Function(List<dynamic>) dropFilter;
+  bool isSelected ;
+  CustomDropdown(this.dropFilter,this.isSelected);
   @override
   _CustomDropdownState createState() => _CustomDropdownState();
 }
@@ -11,14 +20,27 @@ class _CustomDropdownState extends State<CustomDropdown> {
   bool isDropdownOpened = false;
   OverlayEntry floatingDropdown;
   String text = "filter";
+  var feedItems = new List<dynamic>();
 
   void collapse(newText) {
     setState(() {
       text = newText;
+      print(text);
       floatingDropdown.remove();
       isDropdownOpened = false;
+      filter(text, widget.isSelected).then((response) => {
+        // print("Inside Collapse"),
+        
+          feedItems = json.decode(response.body),
+          print("Response Length : " + feedItems[0]["count"].toString()),
+          feedItems = feedItems[0]["feedItemViewModel"],
+          print("Inside Filter : " + feedItems.length.toString()),
+      // print(feedItems);
+        widget.dropFilter(feedItems)
+      });
     });
   }
+
 
   void changeText(newText) {
     setState(() {
@@ -207,17 +229,18 @@ class DropDownState extends State<DropDown> {
                     showDatePicker(
                             builder: (BuildContext context, Widget child) {
                               return Theme(
-                                
                                 data: ThemeData.light().copyWith(
-                                    colorScheme: ColorScheme.light(
-                                        primary: Color(0xFF9a2424)),
-                                    buttonTheme: ButtonThemeData(
-                                        textTheme: ButtonTextTheme
-                                            .primary), //OK/Cancel button text color
-                                    primaryColor: Color(0xFF9a2424), //Head background
-                                    accentColor: Color(0xFF9a2424), //selection color
-                                    //dialogBackgroundColor: Colors.white,//Background color
-                                    ),
+                                  colorScheme: ColorScheme.light(
+                                      primary: Color(0xFF9a2424)),
+                                  buttonTheme: ButtonThemeData(
+                                      textTheme: ButtonTextTheme
+                                          .primary), //OK/Cancel button text color
+                                  primaryColor:
+                                      Color(0xFF9a2424), //Head background
+                                  accentColor:
+                                      Color(0xFF9a2424), //selection color
+                                  //dialogBackgroundColor: Colors.white,//Background color
+                                ),
                                 child: child,
                               );
                             },

@@ -35,6 +35,14 @@ class MyDashBoardState extends State<MyDashBoard> {
     getFeed();
   }
 
+  void dropFilter(feeditems){
+    // print("Inside Drop Filter");
+    print("dropFilter : " + feeditems.length.toString());
+      setState(() {
+        feedItems = feeditems;
+      });
+  }
+
   void onToggleSelected(val) {
     print("in dash selected");
     print(val);
@@ -76,7 +84,7 @@ class MyDashBoardState extends State<MyDashBoard> {
                   ]),
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [CustomDropdown()]),
+                      children: [CustomDropdown(dropFilter,isToggleSelected)]),
                 ],
               )),
           Expanded(
