@@ -32,6 +32,7 @@ Future<dynamic> filter(String text, bool selectedArticles) {
       var now = new DateTime.now();
       var formatter = new DateFormat('EEE MMM d y HH:mm:ss ');
       String ToDate = formatter.format(now);
+      ToDate = ToDate + "GMT 0530 (India Standard Time)" ;
       print(ToDate + "GMT 0530 (India Standard Time)");
       return filterfeed(FromDate, "1", selectedArticles, ToDate);
     } else if (text == 'Last 5 hours') {

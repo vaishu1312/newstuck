@@ -6,10 +6,11 @@ import 'package:newstuck/clement_activities/const.dart';
 import 'package:newstuck/clement_activities/filters.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
+
 class CustomDropdown extends StatefulWidget {
   final Function(List<dynamic>) dropFilter;
-  bool isSelected ;
-  CustomDropdown(this.dropFilter,this.isSelected);
+  bool isSelected;
+  CustomDropdown(this.dropFilter, this.isSelected);
   @override
   _CustomDropdownState createState() => _CustomDropdownState();
 }
@@ -21,6 +22,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
   OverlayEntry floatingDropdown;
   String text = "filter";
   var feedItems = new List<dynamic>();
+  bool isDateChosen = false;
 
   void collapse(newText) {
     setState(() {
@@ -28,19 +30,21 @@ class _CustomDropdownState extends State<CustomDropdown> {
       print(text);
       floatingDropdown.remove();
       isDropdownOpened = false;
-      filter(text, widget.isSelected).then((response) => {
-        // print("Inside Collapse"),
-        
-          feedItems = json.decode(response.body),
-          print("Response Length : " + feedItems[0]["count"].toString()),
-          feedItems = feedItems[0]["feedItemViewModel"],
-          print("Inside Filter : " + feedItems.length.toString()),
-      // print(feedItems);
-        widget.dropFilter(feedItems)
-      });
+      print("Insie Collapse");
+      if (text != 'Choose Date' && !text.contains("/")) {
+        filter(text, widget.isSelected).then((response) => {
+              // print("Inside Collapse"),
+
+              feedItems = json.decode(response.body),
+              print("Response Length : " + feedItems[0]["count"].toString()),
+              feedItems = feedItems[0]["feedItemViewModel"],
+              print("Inside Filter : " + feedItems.length.toString()),
+              // print(feedItems);
+              widget.dropFilter(feedItems)
+            });
+      }
     });
   }
-
 
   void changeText(newText) {
     setState(() {
@@ -74,7 +78,8 @@ class _CustomDropdownState extends State<CustomDropdown> {
         width: width,
         top: yPosition + height,
         height: 8 * height + 80,
-        child: DropDown(collapse, changeText, height),
+        child: DropDown(
+            collapse, changeText, height, widget.dropFilter, widget.isSelected),
       );
     });
   }
@@ -127,6 +132,8 @@ class DropDown extends StatefulWidget {
   final Function(String) collapse;
   final Function(String) changeText;
   final double itemHeight;
+  final Function(List<dynamic>) dropFilter;
+  bool isSelected;
   final List<String> options = [
     'Last 3 days',
     'Last 24 hours',
@@ -138,13 +145,70 @@ class DropDown extends StatefulWidget {
     'Choose Date'
   ];
 
-  DropDown(this.collapse, this.changeText, this.itemHeight);
+  DropDown(this.collapse, this.changeText, this.itemHeight, this.dropFilter,
+      this.isSelected);
 
   @override
   DropDownState createState() => new DropDownState();
 }
 
 class DropDownState extends State<DropDown> {
+  void filterfeedCurrent(String FromDate, String pageNumber,
+      bool selectedArticles, String ToDate) async {
+    http.Response response;
+    final prefs = await SharedPreferences.getInstance();
+
+    String token = prefs.getString("token");
+    // print(token);
+    Map<String, String> requestHeaders = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      "Authorization": "Bearer " + token
+    };
+
+    String uid = prefs.getString("u_id");
+    response = await http.get(
+        returnDomain() +
+            "api/Feed/GetFeedItems?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=$pageNumber",
+        headers: requestHeaders);
+
+    var feedItems = new List<dynamic>();
+    feedItems = json.decode(response.body);
+    feedItems = feedItems[0]["feedItemViewModel"];
+    print("After Print");
+    print(feedItems);
+    widget.dropFilter(feedItems);
+    // return response;
+  }
+
+  void filterfeedreviewCurrent(String FromDate, String pageNumber,
+      bool selectedArticles, String ToDate) async {
+    http.Response response;
+    final prefs = await SharedPreferences.getInstance();
+
+    String token = prefs.getString("token");
+    print(token);
+    Map<String, String> requestHeaders = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      "Authorization": "Bearer " + token
+    };
+
+    String uid = prefs.getString("u_id");
+    response = await http.get(
+        returnDomain() +
+            "api/Feed/GetReviewedArticles?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=$pageNumber",
+        headers: requestHeaders);
+    var feedItems = new List<dynamic>();
+    feedItems = json.decode(response.body);
+    feedItems = feedItems[0]["feedItemViewModel"];
+    print("After Print");
+    print(feedItems);
+    widget.dropFilter(feedItems);
+
+    // return response;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -249,13 +313,37 @@ class DropDownState extends State<DropDown> {
                             firstDate: DateTime(2001),
                             lastDate: DateTime(2021))
                         .then((date) {
-                      String d = date.day.toString() +
-                          "/" +
-                          date.month.toString() +
-                          "/" +
-                          date.year.toString();
-                      print(d);
-                      widget.changeText(d);
+                      if (date != null) {
+                        String d = date.day.toString() +
+                            "/" +
+                            date.month.toString() +
+                            "/" +
+                            date.year.toString();
+                        print(d);
+                        widget.changeText(d);
+
+                        var formatter1 =
+                            new DateFormat('EEE, d MMM y 18:30:00 ');
+                        var subDt = date.toUtc().subtract(Duration(days: 1));
+                        subDt = subDt.add(Duration(days: 1));
+                        String formatted1 = formatter1.format(subDt);
+                        String FromDate = formatted1 + "GMT";
+                        print(FromDate);
+
+                        var now = new DateTime.now();
+                        var formatter = new DateFormat('EEE MMM d y HH:mm:ss ');
+                        String ToDate = formatter.format(now);
+                        ToDate = ToDate + "GMT 0530 (India Standard Time)";
+                        print(ToDate + "GMT 0530 (India Standard Time)");
+
+                        if (widget.isSelected) {
+                          filterfeedreviewCurrent(
+                              FromDate, "1", widget.isSelected, ToDate);
+                        } else {
+                          filterfeedCurrent(
+                              FromDate, "1", widget.isSelected, ToDate);
+                        }
+                      }
                     });
                   },
                   child: DropDownItem.last(
