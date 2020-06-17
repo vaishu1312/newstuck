@@ -14,7 +14,6 @@ import 'package:http/http.dart' as http;
 import 'package:newstuck/clement_activities/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class MyDashBoard extends StatefulWidget {
   MyDashBoard({Key key, this.title}) : super(key: key);
   final String title;
@@ -24,16 +23,25 @@ class MyDashBoard extends StatefulWidget {
 }
 
 class MyDashBoardState extends State<MyDashBoard> {
-
   var feedItems = new List<dynamic>();
+  var isToggleSelected = false;
 
   @override
   void initState() {
     // TODO: implement initState
+    print("new dash");
     super.initState();
     getFeed();
   }
 
+  void onToggleSelected(val) {
+    print("in dash selected");
+    print(val);
+    setState(() {
+      isToggleSelected = val;
+      getFeed();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +69,7 @@ class MyDashBoardState extends State<MyDashBoard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                    MyToggle(),
+                    MyToggle(onToggleSelected),
                     Text('Selected Items Only',
                         style: TextStyle(color: Color(0xAA000000))),
                   ]),
@@ -81,12 +89,11 @@ class MyDashBoardState extends State<MyDashBoard> {
                   padding: EdgeInsets.all(10.0),
                   color: Color(0xFF9a2424),
                   child: Card(
-
                     //child: ExpandRow(),
                     child: HeaderRow(feedItems[index]),
                   ),
 
-                      /*margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
+                  /*margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
                       child: Padding(
                           padding: EdgeInsets.all(5.0),
                           child: Column(
@@ -109,6 +116,7 @@ class MyDashBoardState extends State<MyDashBoard> {
   }
 
   void getFeed() async {
+    http.Response response;
     final prefs = await SharedPreferences.getInstance();
 
     String token = prefs.getString("token");
@@ -118,8 +126,19 @@ class MyDashBoardState extends State<MyDashBoard> {
       'Accept': 'application/json',
       "Authorization": "Bearer " + token
     };
-    http.Response response = await http
-        .get(returnDomain() + "api/Feed/GetFeedItems", headers: requestHeaders);
+
+   
+    if (isToggleSelected){
+      print("new feed");
+       response = await http.get(
+          returnDomain() + "api/Feed/GetReviewedArticles",
+          headers: requestHeaders);
+    }
+    else{
+       response = await http.get(
+          returnDomain() + "api/Feed/GetFeedItems",
+          headers: requestHeaders);
+    }
 
     setState(() {
       feedItems = json.decode(response.body);

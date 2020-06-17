@@ -2,23 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:newstuck/vaishali/request.dart';
 
 class MyToggle extends StatefulWidget {
+
+  final Function(bool) onToggleSelected;
+  MyToggle(this.onToggleSelected);
   @override
   MyToggleState createState() => MyToggleState();
   
 }
 
-class MyToggleState extends State<MyToggle> {
-  
+class MyToggleState extends State<MyToggle> {  
   bool isSwitched = false;
+  
   @override
   Widget build(BuildContext context) {
     return Switch(
       value: isSwitched,
       onChanged: (value) {
-        if(value)
-          Requests.getReviewdArticles();
-        else
-          Requests.getFeeedItems();
+        print("selected");
+        print(value) ;       
+          widget.onToggleSelected(value);
         setState(() {
           isSwitched = value;
         });

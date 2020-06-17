@@ -26,12 +26,14 @@ class HeaderRowState extends State<HeaderRow> {
   @override
   Widget build(BuildContext context) {
 
+    var date_time=feedItem["publishDate"].split("T");
+
     return Column(
       //mainAxisSize: MainAxisSize.min,
       children: [
         ListTile(
             title: MyLink(feedItem["title"],feedItem["href"]),
-            subtitle: Text(feedItem["publishDate"]+" | "+feedItem["category"]),
+            subtitle: Text(date_time[0]+" | "+date_time[1]+" | "+feedItem["category"]),
             trailing: ClipOval(
               child: Material(
                 color: (isPressed)
