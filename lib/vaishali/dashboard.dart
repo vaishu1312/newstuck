@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:newstuck/clement_activities/filters.dart';
@@ -30,7 +32,8 @@ class MyDashBoardState extends State<MyDashBoard> {
   var isToggleSelected = false;
   var firstFeed = new List<dynamic>();
   var filterText = "Last 24 hours";
-
+  ScrollController _scrollController = new ScrollController();
+  var prefs;
   void setText(String text) {
     setState(() {
       filterText = text;
@@ -40,25 +43,104 @@ class MyDashBoardState extends State<MyDashBoard> {
   @override
   void initState() {
     super.initState();
+    initSP();
     filter('Last 24 hours', false).then((response) => {
           if (response.statusCode == 200)
             {
               firstFeed = json.decode(response.body),
               print(firstFeed),
+              prefs.setInt("totalPage", firstFeed[0]["count"]),
               firstFeed = firstFeed[0]["feedItemViewModel"],
               dropFilter(firstFeed)
             }
         });
+
+    _scrollController.addListener(() => scrollListener());
+  }
+
+  void initSP() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  void scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      var sc = _scrollController.position.maxScrollExtent - 200;
+      print("This is Max Scroll Content : $sc");
+      var currentUrl = prefs.getString("currentUrl");
+      print("Success12");
+      var currentPage = prefs.getInt("currentPage");
+      print("currentPage : $currentPage");
+      var totalPage = prefs.getInt("totalPage");
+      print("totalPage :$totalPage");
+      double pages1 = totalPage / 20;
+      print("DoubleDiv : $pages1");
+      int pages = pages1.toInt();
+      print("Div : $pages");
+      int rem = totalPage % 20;
+      print("Rem : $rem");
+      int TotalPages = pages;
+      print("Success16");
+      if (rem > 0) {
+        TotalPages = TotalPages + 1;
+      }
+      print("TotalPages : $TotalPages");
+      print("Success7");
+
+      print(
+          "The Current Url : $currentUrl with current page : $currentPage with total Page: $TotalPages");
+      int nextPage = currentPage + 1;
+      String next = nextPage.toString();
+      print("Next as String: $next ");
+      if (currentPage < TotalPages) {
+        getRemainingFeed(currentUrl, next);
+      }
+    }
+  }
+
+  void getRemainingFeed(String url, String pageNo) async {
+    print("Function Called");
+    String token = prefs.getString("token");
+    print(token);
+    Map<String, String> requestHeaders = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      "Authorization": "Bearer " + token
+    };
+
+    String uid = prefs.getString("u_id");
+    http.Response response =
+        await http.get(returnDomain() + url + pageNo, headers: requestHeaders);
+
+    prefs.setInt("currentPage", int.parse(pageNo));
+    print(json.decode(response.body));
+    var newFeed = json.decode(response.body);
+    newFeed = newFeed[0]["feedItemViewModel"];
+    appendFeed(newFeed);
+  }
+
+  void appendFeed(feeditems) {
+    setState(() {
+      feedItems.addAll(feeditems);
+    });
   }
 
   void dropFilter(feeditems) {
+    print("SMith Awesome 1");
     // print("Inside Drop Filter");
     print("dropFilter : " + feeditems.length.toString());
     setState(() {
-      feedItems = feeditems;
-      print("After SetState");
-      print(feedItems);
+      feedItems.clear();
     });
+    if (feedItems.length == 0) {
+      Timer(Duration(seconds: 2),()=>{
+      setState(() {
+        feedItems = feeditems;
+        // print("After SetState");
+        // print(feedItems);
+      })
+      });
+    }
   }
 
   void onToggleSelected(val) {
@@ -70,13 +152,15 @@ class MyDashBoardState extends State<MyDashBoard> {
     print(filterText);
     print("SMith State Change");
     print(filterText.contains("-"));
-    if (filterText.contains("-") == false ) {
+    if (filterText.contains("-") == false) {
       filter(filterText, isToggleSelected).then((response) => {
             if (response.statusCode == 200)
               {
                 firstFeed = json.decode(response.body),
                 print(firstFeed),
+                prefs.setInt("totalPage", firstFeed[0]["count"]),
                 firstFeed = firstFeed[0]["feedItemViewModel"],
+                print("Smith Awesome"),
                 dropFilter(firstFeed)
               }
           });
@@ -143,6 +227,7 @@ class MyDashBoardState extends State<MyDashBoard> {
               )),
           Expanded(
             child: ListView.builder(
+              controller: _scrollController,
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: feedItems.length,
@@ -204,6 +289,9 @@ class MyDashBoardState extends State<MyDashBoard> {
     }
 
     setState(() {
+      feedItems.clear();
+    });
+    setState(() {
       feedItems = json.decode(response.body);
       feedItems = feedItems[0]["feedItemViewModel"];
       //print(feedItems);
@@ -228,10 +316,13 @@ class MyDashBoardState extends State<MyDashBoard> {
         returnDomain() +
             "api/Feed/GetFeedItems?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=$pageNumber",
         headers: requestHeaders);
-
+    prefs.setString("currentUrl",
+        "api/Feed/GetFeedItems?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=");
+    prefs.setInt("currentPage", int.parse(pageNumber));
     var feedItems = new List<dynamic>();
     feedItems = json.decode(response.body);
     feedItems = feedItems[0]["feedItemViewModel"];
+    prefs.setInt("totalPage", feedItems[0]["count"]);
     print("After Print");
     print(feedItems);
     dropFilter(feedItems);
@@ -256,9 +347,14 @@ class MyDashBoardState extends State<MyDashBoard> {
         returnDomain() +
             "api/Feed/GetReviewedArticles?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=$pageNumber",
         headers: requestHeaders);
+    prefs.setString("currentUrl",
+        "api/Feed/GetReviewedArticles?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=");
+    prefs.setInt("currentPage", int.parse(pageNumber));
     var feedItems = new List<dynamic>();
     feedItems = json.decode(response.body);
+    prefs.setInt("totalPage", feedItems[0]["count"]);
     feedItems = feedItems[0]["feedItemViewModel"];
+
     print("After Print");
     print(feedItems);
     dropFilter(feedItems);

@@ -32,7 +32,7 @@ Future<dynamic> filter(String text, bool selectedArticles) {
       var now = new DateTime.now();
       var formatter = new DateFormat('EEE MMM d y HH:mm:ss ');
       String ToDate = formatter.format(now);
-      ToDate = ToDate + "GMT 0530 (India Standard Time)" ;
+      ToDate = ToDate + "GMT 0530 (India Standard Time)";
       print(ToDate + "GMT 0530 (India Standard Time)");
       return filterfeed(FromDate, "1", selectedArticles, ToDate);
     } else if (text == 'Last 5 hours') {
@@ -205,6 +205,10 @@ Future<http.Response> filterfeed(String FromDate, String pageNumber,
           "api/Feed/GetFeedItems?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=$pageNumber",
       headers: requestHeaders);
 
+  prefs.setString("currentUrl",
+      "api/Feed/GetFeedItems?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=");
+  prefs.setInt("currentPage", int.parse(pageNumber));
+
   return response;
 }
 
@@ -226,6 +230,8 @@ Future<http.Response> filterfeedreview(String FromDate, String pageNumber,
       returnDomain() +
           "api/Feed/GetReviewedArticles?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=$pageNumber",
       headers: requestHeaders);
-
+      
+  prefs.setString("currentUrl", "api/Feed/GetReviewedArticles?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=");
+  prefs.setInt("currentPage", int.parse(pageNumber));
   return response;
 }

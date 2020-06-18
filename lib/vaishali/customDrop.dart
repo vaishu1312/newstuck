@@ -24,8 +24,8 @@ class _CustomDropdownState extends State<CustomDropdown> {
   String text = "Last 24 hours";
   var feedItems = new List<dynamic>();
   bool isDateChosen = false;
-
-  void justCollapse(){
+  var prefs;
+  void justCollapse() {
     setState(() {
       floatingDropdown.remove();
       isDropdownOpened = false;
@@ -37,7 +37,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
       text = newText;
       widget.setText(newText);
       print(text);
-      
+      floatingDropdown.remove();
       isDropdownOpened = false;
       print("Insie Collapse");
       if (text != 'Choose Date' && !text.contains("/")) {
@@ -46,8 +46,10 @@ class _CustomDropdownState extends State<CustomDropdown> {
 
               feedItems = json.decode(response.body),
               print("Response Length : " + feedItems[0]["count"].toString()),
+              prefs.setInt("totalPage", feedItems[0]["count"]),
               feedItems = feedItems[0]["feedItemViewModel"],
               print("Inside Filter : " + feedItems.length.toString()),
+
               // print(feedItems);
               widget.dropFilter(feedItems)
             });
@@ -66,6 +68,12 @@ class _CustomDropdownState extends State<CustomDropdown> {
   void initState() {
     actionKey = LabeledGlobalKey(text);
     super.initState();
+    initSP();
+    // prefs = SharedPreferences.getInstance();
+  }
+
+  void initSP() async {
+    prefs = await SharedPreferences.getInstance();
   }
 
   void findDropdownData() {
@@ -88,8 +96,8 @@ class _CustomDropdownState extends State<CustomDropdown> {
         width: width,
         top: yPosition + height,
         height: 8 * height + 80,
-        child: DropDown(
-            collapse, changeText, height, widget.dropFilter, widget.isSelected,justCollapse),
+        child: DropDown(collapse, changeText, height, widget.dropFilter,
+            widget.isSelected, justCollapse),
       );
     });
   }
@@ -157,7 +165,7 @@ class DropDown extends StatefulWidget {
   ];
 
   DropDown(this.collapse, this.changeText, this.itemHeight, this.dropFilter,
-      this.isSelected,this.justCollapse);
+      this.isSelected, this.justCollapse);
 
   @override
   DropDownState createState() => new DropDownState();
@@ -182,10 +190,15 @@ class DropDownState extends State<DropDown> {
         returnDomain() +
             "api/Feed/GetFeedItems?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=$pageNumber",
         headers: requestHeaders);
+    prefs.setString("currentUrl",
+        "api/Feed/GetFeedItems?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=");
+    prefs.setInt("currentPage", int.parse(pageNumber));
 
     var feedItems = new List<dynamic>();
     feedItems = json.decode(response.body);
+    prefs.setInt("totalPage", feedItems[0]["count"]);
     feedItems = feedItems[0]["feedItemViewModel"];
+
     print("After Print");
     print(feedItems);
     widget.dropFilter(feedItems);
@@ -210,8 +223,12 @@ class DropDownState extends State<DropDown> {
         returnDomain() +
             "api/Feed/GetReviewedArticles?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=$pageNumber",
         headers: requestHeaders);
+    prefs.setString("currentUrl",
+        "api/Feed/GetReviewedArticles?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=");
+    prefs.setInt("currentPage", int.parse(pageNumber));
     var feedItems = new List<dynamic>();
     feedItems = json.decode(response.body);
+    prefs.setInt("totalPage", feedItems[0]["count"]);
     feedItems = feedItems[0]["feedItemViewModel"];
     print("After Print");
     print(feedItems);
