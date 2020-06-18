@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:newstuck/clement_activities/filters.dart';
@@ -32,6 +33,7 @@ class MyDashBoardState extends State<MyDashBoard> {
   var isToggleSelected = false;
   var firstFeed = new List<dynamic>();
   var filterText = "Last 24 hours";
+  bool load = false;
   ScrollController _scrollController = new ScrollController();
   var prefs;
   void setText(String text) {
@@ -93,6 +95,9 @@ class MyDashBoardState extends State<MyDashBoard> {
       String next = nextPage.toString();
       print("Next as String: $next ");
       if (currentPage < TotalPages) {
+        // setState(() {
+        //   load = true;
+        // });
         getRemainingFeed(currentUrl, next);
       }
     }
@@ -225,13 +230,19 @@ class MyDashBoardState extends State<MyDashBoard> {
                   ]),
                 ],
               )),
+              
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              itemCount: feedItems.length,
+              itemCount: feedItems.length + 1,
               itemBuilder: (context, index) {
+                if(index == feedItems.length){
+                return CupertinoActivityIndicator(
+                  radius: 20,
+                );
+              }
                 return Container(
                   //height: h - CustomAppBar().preferredSize.height - (h * 0.15),
                   padding: EdgeInsets.all(10.0),
