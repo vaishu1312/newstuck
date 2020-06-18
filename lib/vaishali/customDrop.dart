@@ -11,7 +11,7 @@ class CustomDropdown extends StatefulWidget {
   final Function(List<dynamic>) dropFilter;
   bool isSelected;
   final Function(String text) setText;
-  CustomDropdown(this.dropFilter, this.isSelected,this.setText);
+  CustomDropdown(this.dropFilter, this.isSelected, this.setText);
   @override
   _CustomDropdownState createState() => _CustomDropdownState();
 }
@@ -25,13 +25,19 @@ class _CustomDropdownState extends State<CustomDropdown> {
   var feedItems = new List<dynamic>();
   bool isDateChosen = false;
 
+  void justCollapse(){
+    setState(() {
+      floatingDropdown.remove();
+      isDropdownOpened = false;
+    });
+  }
+
   void collapse(newText) {
-   
     setState(() {
       text = newText;
       widget.setText(newText);
       print(text);
-      floatingDropdown.remove();
+      
       isDropdownOpened = false;
       print("Insie Collapse");
       if (text != 'Choose Date' && !text.contains("/")) {
@@ -52,6 +58,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
   void changeText(newText) {
     setState(() {
       text = newText;
+      widget.setText(newText);
     });
   }
 
@@ -82,7 +89,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
         top: yPosition + height,
         height: 8 * height + 80,
         child: DropDown(
-            collapse, changeText, height, widget.dropFilter, widget.isSelected),
+            collapse, changeText, height, widget.dropFilter, widget.isSelected,justCollapse),
       );
     });
   }
@@ -133,6 +140,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
 
 class DropDown extends StatefulWidget {
   final Function(String) collapse;
+  final Function() justCollapse;
   final Function(String) changeText;
   final double itemHeight;
   final Function(List<dynamic>) dropFilter;
@@ -149,7 +157,7 @@ class DropDown extends StatefulWidget {
   ];
 
   DropDown(this.collapse, this.changeText, this.itemHeight, this.dropFilter,
-      this.isSelected);
+      this.isSelected,this.justCollapse);
 
   @override
   DropDownState createState() => new DropDownState();
@@ -292,7 +300,8 @@ class DropDownState extends State<DropDown> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    widget.collapse(widget.options[7]);
+                    // widget.collapse(widget.options[7]);
+                    widget.justCollapse();
                     showDatePicker(
                             builder: (BuildContext context, Widget child) {
                               return Theme(
@@ -317,13 +326,15 @@ class DropDownState extends State<DropDown> {
                             lastDate: DateTime(2021))
                         .then((date) {
                       if (date != null) {
-                        String d = date.day.toString() +
-                            "/" +
+                        String d = date.year.toString() +
+                            "-" +
                             date.month.toString() +
-                            "/" +
-                            date.year.toString();
-                        print(d);
-                        widget.changeText(d);
+                            "-" +
+                            date.day.toString();
+                        var formatter2 = new DateFormat('yyyy-MM-dd');
+                        String formattedDate = formatter2.format(date);
+
+                        widget.changeText(formattedDate);
 
                         var formatter1 =
                             new DateFormat('EEE, d MMM y 18:30:00 ');
@@ -332,6 +343,7 @@ class DropDownState extends State<DropDown> {
                         String formatted1 = formatter1.format(subDt);
                         String FromDate = formatted1 + "GMT";
                         print(FromDate);
+                        print("After Date Selected");
 
                         var now = new DateTime.now();
                         var formatter = new DateFormat('EEE MMM d y HH:mm:ss ');

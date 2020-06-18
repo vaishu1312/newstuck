@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:newstuck/clement_activities/filters.dart';
 import 'package:newstuck/vaishali/appBar.dart';
 //import 'package:newstuck/vaishali/dropdown.dart';
@@ -55,6 +56,8 @@ class MyDashBoardState extends State<MyDashBoard> {
     print("dropFilter : " + feeditems.length.toString());
     setState(() {
       feedItems = feeditems;
+      print("After SetState");
+      print(feedItems);
     });
   }
 
@@ -63,6 +66,11 @@ class MyDashBoardState extends State<MyDashBoard> {
     print(val);
     setState(() {
       isToggleSelected = val;
+    });
+    print(filterText);
+    print("SMith State Change");
+    print(filterText.contains("-"));
+    if (filterText.contains("-") == false ) {
       filter(filterText, isToggleSelected).then((response) => {
             if (response.statusCode == 200)
               {
@@ -72,7 +80,30 @@ class MyDashBoardState extends State<MyDashBoard> {
                 dropFilter(firstFeed)
               }
           });
-    });
+    } else {
+      DateTime date = DateTime.parse(filterText);
+      print("After Parsing");
+      print(filterText);
+      var formatter1 = new DateFormat('EEE, d MMM y 18:30:00 ');
+      var subDt = date.toUtc().subtract(Duration(days: 1));
+      subDt = subDt.add(Duration(days: 1));
+      String formatted1 = formatter1.format(subDt);
+      String FromDate = formatted1 + "GMT";
+      print(FromDate);
+      print("After Date Selected");
+
+      var now = new DateTime.now();
+      var formatter = new DateFormat('EEE MMM d y HH:mm:ss ');
+      String ToDate = formatter.format(now);
+      ToDate = ToDate + "GMT 0530 (India Standard Time)";
+      print(ToDate + "GMT 0530 (India Standard Time)");
+
+      if (isToggleSelected) {
+        filterfeedreviewCurrent(FromDate, "1", isToggleSelected, ToDate);
+      } else {
+        filterfeedCurrent(FromDate, "1", isToggleSelected, ToDate);
+      }
+    }
   }
 
   @override
@@ -177,5 +208,61 @@ class MyDashBoardState extends State<MyDashBoard> {
       feedItems = feedItems[0]["feedItemViewModel"];
       //print(feedItems);
     });
+  }
+
+  void filterfeedCurrent(String FromDate, String pageNumber,
+      bool selectedArticles, String ToDate) async {
+    http.Response response;
+    final prefs = await SharedPreferences.getInstance();
+
+    String token = prefs.getString("token");
+    // print(token);
+    Map<String, String> requestHeaders = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      "Authorization": "Bearer " + token
+    };
+
+    String uid = prefs.getString("u_id");
+    response = await http.get(
+        returnDomain() +
+            "api/Feed/GetFeedItems?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=$pageNumber",
+        headers: requestHeaders);
+
+    var feedItems = new List<dynamic>();
+    feedItems = json.decode(response.body);
+    feedItems = feedItems[0]["feedItemViewModel"];
+    print("After Print");
+    print(feedItems);
+    dropFilter(feedItems);
+    // return response;
+  }
+
+  void filterfeedreviewCurrent(String FromDate, String pageNumber,
+      bool selectedArticles, String ToDate) async {
+    http.Response response;
+    final prefs = await SharedPreferences.getInstance();
+
+    String token = prefs.getString("token");
+    print(token);
+    Map<String, String> requestHeaders = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      "Authorization": "Bearer " + token
+    };
+
+    String uid = prefs.getString("u_id");
+    response = await http.get(
+        returnDomain() +
+            "api/Feed/GetReviewedArticles?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=$pageNumber",
+        headers: requestHeaders);
+    var feedItems = new List<dynamic>();
+    feedItems = json.decode(response.body);
+    feedItems = feedItems[0]["feedItemViewModel"];
+    print("After Print");
+    print(feedItems);
+    dropFilter(feedItems);
+
+    // return response;
   }
 }
