@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newstuck/clement_activities/filters.dart';
 import 'package:newstuck/vaishali/appBar.dart';
 //import 'package:newstuck/vaishali/dropdown.dart';
 import 'package:newstuck/vaishali/toggle.dart';
@@ -26,21 +27,37 @@ class MyDashBoard extends StatefulWidget {
 class MyDashBoardState extends State<MyDashBoard> {
   var feedItems = new List<dynamic>();
   var isToggleSelected = false;
+  var firstFeed = new List<dynamic>();
+  var filterText = "Last 24 hours";
+
+  void setText(String text) {
+    setState(() {
+      filterText = text;
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     print("new dash");
     super.initState();
-    getFeed();
+    filter('Last 24 hours', false).then((response) => {
+          if (response.statusCode == 200)
+            {
+              firstFeed = json.decode(response.body),
+              print(firstFeed),
+              firstFeed = firstFeed[0]["feedItemViewModel"],
+              dropFilter(firstFeed)
+            }
+        });
   }
 
-  void dropFilter(feeditems){
+  void dropFilter(feeditems) {
     // print("Inside Drop Filter");
     print("dropFilter : " + feeditems.length.toString());
-      setState(() {
-        feedItems = feeditems;
-      });
+    setState(() {
+      feedItems = feeditems;
+    });
   }
 
   void onToggleSelected(val) {
@@ -48,7 +65,15 @@ class MyDashBoardState extends State<MyDashBoard> {
     print(val);
     setState(() {
       isToggleSelected = val;
-      getFeed();
+      filter(filterText, isToggleSelected).then((response) => {
+            if (response.statusCode == 200)
+              {
+                firstFeed = json.decode(response.body),
+                print(firstFeed),
+                firstFeed = firstFeed[0]["feedItemViewModel"],
+                dropFilter(firstFeed)
+              }
+          });
     });
   }
 
@@ -82,9 +107,9 @@ class MyDashBoardState extends State<MyDashBoard> {
                     Text('Selected Items Only',
                         style: TextStyle(color: Color(0xAA000000))),
                   ]),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [CustomDropdown(dropFilter,isToggleSelected)]),
+                  Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                    CustomDropdown(dropFilter, isToggleSelected, setText)
+                  ]),
                 ],
               )),
           Expanded(
@@ -136,17 +161,16 @@ class MyDashBoardState extends State<MyDashBoard> {
       "Authorization": "Bearer " + token
     };
 
-   
-    if (isToggleSelected){
+    if (isToggleSelected) {
       print("new feed");
-      String uid=prefs.getString("u_id");
-       response = await http.get(
-          returnDomain() + "api/Feed/GetReviewedArticles?SelectedArticles=true&UserId="+uid,
+      String uid = prefs.getString("u_id");
+      response = await http.get(
+          returnDomain() +
+              "api/Feed/GetReviewedArticles?SelectedArticles=true&UserId=" +
+              uid,
           headers: requestHeaders);
-    }
-    else{
-       response = await http.get(
-          returnDomain() + "api/Feed/GetFeedItems",
+    } else {
+      response = await http.get(returnDomain() + "api/Feed/GetFeedItems",
           headers: requestHeaders);
     }
 

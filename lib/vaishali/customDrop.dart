@@ -10,7 +10,8 @@ import 'package:intl/intl.dart';
 class CustomDropdown extends StatefulWidget {
   final Function(List<dynamic>) dropFilter;
   bool isSelected;
-  CustomDropdown(this.dropFilter, this.isSelected);
+  final Function(String text) setText;
+  CustomDropdown(this.dropFilter, this.isSelected,this.setText);
   @override
   _CustomDropdownState createState() => _CustomDropdownState();
 }
@@ -20,13 +21,15 @@ class _CustomDropdownState extends State<CustomDropdown> {
   double height, width, xPosition, yPosition;
   bool isDropdownOpened = false;
   OverlayEntry floatingDropdown;
-  String text = "filter";
+  String text = "Last 24 hours";
   var feedItems = new List<dynamic>();
   bool isDateChosen = false;
 
   void collapse(newText) {
+   
     setState(() {
       text = newText;
+      widget.setText(newText);
       print(text);
       floatingDropdown.remove();
       isDropdownOpened = false;
