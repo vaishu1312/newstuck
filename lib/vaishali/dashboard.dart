@@ -38,8 +38,6 @@ class MyDashBoardState extends State<MyDashBoard> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    print("new dash");
     super.initState();
     filter('Last 24 hours', false).then((response) => {
           if (response.statusCode == 200)
@@ -80,8 +78,8 @@ class MyDashBoardState extends State<MyDashBoard> {
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
-    print(MediaQuery.of(context).size.width);
-    print(h);
+    //print(MediaQuery.of(context).size.width);
+    //print(h);
     return Scaffold(
       appBar: CustomAppBar(),
       body: Container(
@@ -154,7 +152,7 @@ class MyDashBoardState extends State<MyDashBoard> {
     final prefs = await SharedPreferences.getInstance();
 
     String token = prefs.getString("token");
-    print(token);
+    //print(token);
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
@@ -177,7 +175,7 @@ class MyDashBoardState extends State<MyDashBoard> {
     setState(() {
       feedItems = json.decode(response.body);
       feedItems = feedItems[0]["feedItemViewModel"];
-      print(feedItems);
+      //print(feedItems);
     });
   }
 }

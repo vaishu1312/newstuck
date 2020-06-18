@@ -133,7 +133,7 @@ class _Home extends State<Home> {
                     child: OutlineButton(
                       onPressed: () {
                         login(context1, context).then((value) {
-                          print(value);
+                          //print(value);
                           if (value) {
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
@@ -179,7 +179,7 @@ class _Home extends State<Home> {
       if (user["errors"] != null) {
         if (user["errors"]["Username"] != null &&
             user["errors"]["Password"] != null) {
-          print("Both Username And Password Required");
+          //print("Both Username And Password Required");
 
           setState(() {
             username_error = "Username is Required";

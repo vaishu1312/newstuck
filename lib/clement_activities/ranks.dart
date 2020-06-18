@@ -101,7 +101,7 @@ class _rankBar extends State<rankBar> {
     final prefs = await SharedPreferences.getInstance();
 
     String token = prefs.getString("token");
-    print(token);
+    //print(token);
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Accept': 'application/json',

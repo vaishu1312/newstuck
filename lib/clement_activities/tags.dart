@@ -74,7 +74,7 @@ class _TagBuild extends State<TagBuild> {
     final prefs = await SharedPreferences.getInstance();
 
     String token = prefs.getString("token");
-    print(token);
+    //print(token);
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
@@ -92,7 +92,7 @@ class _TagBuild extends State<TagBuild> {
       });
     }
     //
-    print("Hello");
-    print(tagItems);
+    //print("Hello");
+    //print(tagItems);
   }
 }
