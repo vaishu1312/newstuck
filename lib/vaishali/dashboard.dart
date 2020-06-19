@@ -54,7 +54,7 @@ class MyDashBoardState extends State<MyDashBoard> {
           if (response.statusCode == 200)
             {
               firstFeed = json.decode(response.body),
-              print(firstFeed),
+              //print(firstFeed),
               prefs.setInt("totalPage", firstFeed[0]["count"]),
               firstFeed = firstFeed[0]["feedItemViewModel"],
               dropFilter(firstFeed)
@@ -276,22 +276,8 @@ class MyDashBoardState extends State<MyDashBoard> {
                   color: Color(0xFF9a2424),
                   child: Card(
                     //child: ExpandRow(),
-                    child: HeaderRow(feedItems[index]),
+                    child: HeaderRow(feedItems[index],isToggleSelected),
                   ),
-
-                  /*margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-                      child: Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Column(
-                            children: [
-                              HeaderRow(feedItems[index]),
-                              //Expanded(flex: 1, child: HeaderRow()),
-                              Expanded(flex: 1, child: rankBar()),
-                              Expanded(flex: 1, child: TagBuild()),
-                              //rankBar(),
-                              //TagBuild(),
-                            ],
-                          ))),*/
                 );
               },
             ),
@@ -356,6 +342,7 @@ class MyDashBoardState extends State<MyDashBoard> {
         returnDomain() +
             "api/Feed/GetFeedItems?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=$pageNumber",
         headers: requestHeaders);
+
     if (response.statusCode == 200) {
       prefs.setString("currentUrl",
           "api/Feed/GetFeedItems?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=");
@@ -370,7 +357,7 @@ class MyDashBoardState extends State<MyDashBoard> {
     } else {
       Get.offAll(Home());
     }
-    // return response;
+
   }
 
   void filterfeedreviewCurrent(String FromDate, String pageNumber,
@@ -380,7 +367,7 @@ class MyDashBoardState extends State<MyDashBoard> {
     final prefs = await SharedPreferences.getInstance();
 
     String token = prefs.getString("token");
-    print(token);
+    //print(token);
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
@@ -407,6 +394,7 @@ class MyDashBoardState extends State<MyDashBoard> {
     } else {
       Get.offAll(Home());
     }
+
 
     // return response;
   }

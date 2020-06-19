@@ -263,7 +263,7 @@ class DropDownState extends State<DropDown> {
         ),
         Material(
           child: Container(
-            height: 8 * widget.itemHeight,
+            //height: 8 * widget.itemHeight,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
             ),
