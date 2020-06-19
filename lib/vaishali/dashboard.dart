@@ -36,7 +36,7 @@ class MyDashBoardState extends State<MyDashBoard> {
   var isToggleSelected = false;
   var firstFeed = new List<dynamic>();
   var filterText = "Last 24 hours";
-  bool load = true;
+  bool load = false;
   var totalPages;
   ScrollController _scrollController = new ScrollController();
   var prefs;
@@ -102,9 +102,9 @@ class MyDashBoardState extends State<MyDashBoard> {
       String next = nextPage.toString();
       print("Next as String: $next ");
       if (currentPage < TotalPages) {
-        // setState(() {
-        //   load = true;
-        // });
+        setState(() {
+          load = true;
+        });
         getRemainingFeed(currentUrl, next);
       }
     }
@@ -133,9 +133,9 @@ class MyDashBoardState extends State<MyDashBoard> {
   }
 
   void appendFeed(feeditems) {
-    setState(() {
-      load = true;
-    });
+    // setState(() {
+    //   load = true;
+    // });
     setState(() {
       feedItems.addAll(feeditems);
     });
@@ -150,6 +150,9 @@ class MyDashBoardState extends State<MyDashBoard> {
     print("dropFilter : " + feeditems.length.toString());
     setState(() {
       feedItems.clear();
+      
+    });
+    setState(() {
       load = true;
     });
     if (feedItems.length == 0) {
@@ -257,15 +260,9 @@ class MyDashBoardState extends State<MyDashBoard> {
               controller: _scrollController,
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              itemCount: feedItems.length + 1,
+              itemCount: load?feedItems.length + 1:feedItems.length,
               itemBuilder: (context, index) {
-                if (index == feedItems.length) {
-                  // print("Before Current Page");
-                  // print(prefs.getInt("currentPage"));
-                  // if (prefs.getInt("currentPage") == totalPages) {
-                  //   print("ContainerSuccess");
-                  //   return Container(height: 0);
-                  // }
+                if (index == feedItems.length && load) {
                   return CupertinoActivityIndicator(
                     radius: 20,
                   );
