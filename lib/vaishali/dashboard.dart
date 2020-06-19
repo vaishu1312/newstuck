@@ -15,6 +15,7 @@ import 'package:newstuck/vaishali/customDrop.dart';
 import 'package:newstuck/vaishali/headline.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:newstuck/clement_activities/home.dart';
 //import 'package:newstuck/vaishali/expand.dart';
 
 import 'package:newstuck/clement_activities/ranks.dart';
@@ -124,12 +125,15 @@ class MyDashBoardState extends State<MyDashBoard> {
     String uid = prefs.getString("u_id");
     http.Response response =
         await http.get(returnDomain() + url + pageNo, headers: requestHeaders);
-
-    prefs.setInt("currentPage", int.parse(pageNo));
-    print(json.decode(response.body));
-    var newFeed = json.decode(response.body);
-    newFeed = newFeed[0]["feedItemViewModel"];
-    appendFeed(newFeed);
+    if (response.statusCode == 200) {
+      prefs.setInt("currentPage", int.parse(pageNo));
+      print(json.decode(response.body));
+      var newFeed = json.decode(response.body);
+      newFeed = newFeed[0]["feedItemViewModel"];
+      appendFeed(newFeed);
+    } else {
+      Get.offAll(Home());
+    }
   }
 
   void appendFeed(feeditems) {
@@ -150,7 +154,6 @@ class MyDashBoardState extends State<MyDashBoard> {
     print("dropFilter : " + feeditems.length.toString());
     setState(() {
       feedItems.clear();
-      
     });
     setState(() {
       load = true;
@@ -170,7 +173,6 @@ class MyDashBoardState extends State<MyDashBoard> {
     setState(() {
       load = false;
     });
-    
   }
 
   void onToggleSelected(val) {
@@ -260,7 +262,7 @@ class MyDashBoardState extends State<MyDashBoard> {
               controller: _scrollController,
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              itemCount: load?feedItems.length + 1:feedItems.length,
+              itemCount: load ? feedItems.length + 1 : feedItems.length,
               itemBuilder: (context, index) {
                 if (index == feedItems.length && load) {
                   return CupertinoActivityIndicator(
@@ -337,7 +339,7 @@ class MyDashBoardState extends State<MyDashBoard> {
 
   void filterfeedCurrent(String FromDate, String pageNumber,
       bool selectedArticles, String ToDate) async {
-        checkTokenValid();
+    checkTokenValid();
     http.Response response;
     final prefs = await SharedPreferences.getInstance();
 
@@ -354,22 +356,26 @@ class MyDashBoardState extends State<MyDashBoard> {
         returnDomain() +
             "api/Feed/GetFeedItems?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=$pageNumber",
         headers: requestHeaders);
-    prefs.setString("currentUrl",
-        "api/Feed/GetFeedItems?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=");
-    prefs.setInt("currentPage", int.parse(pageNumber));
-    var feedItems = new List<dynamic>();
-    feedItems = json.decode(response.body);
-    feedItems = feedItems[0]["feedItemViewModel"];
-    prefs.setInt("totalPage", feedItems[0]["count"]);
-    print("After Print");
-    print(feedItems);
-    dropFilter(feedItems);
+    if (response.statusCode == 200) {
+      prefs.setString("currentUrl",
+          "api/Feed/GetFeedItems?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=");
+      prefs.setInt("currentPage", int.parse(pageNumber));
+      var feedItems = new List<dynamic>();
+      feedItems = json.decode(response.body);
+      feedItems = feedItems[0]["feedItemViewModel"];
+      prefs.setInt("totalPage", feedItems[0]["count"]);
+      print("After Print");
+      print(feedItems);
+      dropFilter(feedItems);
+    } else {
+      Get.offAll(Home());
+    }
     // return response;
   }
 
   void filterfeedreviewCurrent(String FromDate, String pageNumber,
       bool selectedArticles, String ToDate) async {
-        checkTokenValid();
+    checkTokenValid();
     http.Response response;
     final prefs = await SharedPreferences.getInstance();
 
@@ -386,17 +392,21 @@ class MyDashBoardState extends State<MyDashBoard> {
         returnDomain() +
             "api/Feed/GetReviewedArticles?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=$pageNumber",
         headers: requestHeaders);
-    prefs.setString("currentUrl",
-        "api/Feed/GetReviewedArticles?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=");
-    prefs.setInt("currentPage", int.parse(pageNumber));
-    var feedItems = new List<dynamic>();
-    feedItems = json.decode(response.body);
-    prefs.setInt("totalPage", feedItems[0]["count"]);
-    feedItems = feedItems[0]["feedItemViewModel"];
+    if (response.statusCode == 200) {
+      prefs.setString("currentUrl",
+          "api/Feed/GetReviewedArticles?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=");
+      prefs.setInt("currentPage", int.parse(pageNumber));
+      var feedItems = new List<dynamic>();
+      feedItems = json.decode(response.body);
+      prefs.setInt("totalPage", feedItems[0]["count"]);
+      feedItems = feedItems[0]["feedItemViewModel"];
 
-    print("After Print");
-    print(feedItems);
-    dropFilter(feedItems);
+      print("After Print");
+      print(feedItems);
+      dropFilter(feedItems);
+    } else {
+      Get.offAll(Home());
+    }
 
     // return response;
   }

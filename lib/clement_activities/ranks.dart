@@ -2,11 +2,12 @@ import 'dart:convert';
 
 import 'package:dropdownfield/dropdownfield.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:newstuck/clement_activities/const.dart';
 import 'package:newstuck/clement_activities/validToken.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import "package:newstuck/clement_activities/home.dart";
 class rankBar extends StatefulWidget {
   var feed = new Map<String, dynamic>();
   rankBar(this.feed);
@@ -119,6 +120,8 @@ class _rankBar extends State<rankBar> {
         feedItems = json.decode(response.body);
         itemValue = List<String>.generate(feedItems.length, (index) => widget.feed["feedDimensions"][index]["dimensionRank"].toString());
       });
+    }else{
+      Get.offAll(Home());
     }
     //
     // print("Hello");
@@ -148,6 +151,8 @@ class _rankBar extends State<rankBar> {
     
     if(response.statusCode == 200){
       print("Post Feed Updated");
+    }else{
+      Get.offAll(Home());
     }
   }
 }

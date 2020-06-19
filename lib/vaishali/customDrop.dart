@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:newstuck/clement_activities/const.dart';
 import 'package:newstuck/clement_activities/filters.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:newstuck/clement_activities/validToken.dart';
+import "package:newstuck/clement_activities/home.dart";
 
 class CustomDropdown extends StatefulWidget {
   final Function(List<dynamic>) dropFilter;
@@ -44,15 +46,20 @@ class _CustomDropdownState extends State<CustomDropdown> {
       if (text != 'Choose Date' && !text.contains("/")) {
         filter(text, widget.isSelected).then((response) => {
               // print("Inside Collapse"),
+              if (response.statusCode == 200)
+                {
+                  feedItems = json.decode(response.body),
+                  print(
+                      "Response Length : " + feedItems[0]["count"].toString()),
+                  prefs.setInt("totalPage", feedItems[0]["count"]),
+                  feedItems = feedItems[0]["feedItemViewModel"],
+                  print("Inside Filter : " + feedItems.length.toString()),
 
-              feedItems = json.decode(response.body),
-              print("Response Length : " + feedItems[0]["count"].toString()),
-              prefs.setInt("totalPage", feedItems[0]["count"]),
-              feedItems = feedItems[0]["feedItemViewModel"],
-              print("Inside Filter : " + feedItems.length.toString()),
-
-              // print(feedItems);
-              widget.dropFilter(feedItems)
+                  // print(feedItems);
+                  widget.dropFilter(feedItems)
+                }
+              else
+                {Get.offAll(Home())}
             });
       }
     });
@@ -173,10 +180,9 @@ class DropDown extends StatefulWidget {
 }
 
 class DropDownState extends State<DropDown> {
-  
   void filterfeedCurrent(String FromDate, String pageNumber,
       bool selectedArticles, String ToDate) async {
-        checkTokenValid();
+    checkTokenValid();
     http.Response response;
     final prefs = await SharedPreferences.getInstance();
 
@@ -196,21 +202,24 @@ class DropDownState extends State<DropDown> {
     prefs.setString("currentUrl",
         "api/Feed/GetFeedItems?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=");
     prefs.setInt("currentPage", int.parse(pageNumber));
+    if (response.statusCode == 200) {
+      var feedItems = new List<dynamic>();
+      feedItems = json.decode(response.body);
+      prefs.setInt("totalPage", feedItems[0]["count"]);
+      feedItems = feedItems[0]["feedItemViewModel"];
 
-    var feedItems = new List<dynamic>();
-    feedItems = json.decode(response.body);
-    prefs.setInt("totalPage", feedItems[0]["count"]);
-    feedItems = feedItems[0]["feedItemViewModel"];
-
-    print("After Print");
-    print(feedItems);
-    widget.dropFilter(feedItems);
+      print("After Print");
+      print(feedItems);
+      widget.dropFilter(feedItems);
+    } else {
+      Get.offAll(Home());
+    }
     // return response;
   }
 
   void filterfeedreviewCurrent(String FromDate, String pageNumber,
       bool selectedArticles, String ToDate) async {
-        checkTokenValid();
+    checkTokenValid();
     http.Response response;
     final prefs = await SharedPreferences.getInstance();
 
@@ -230,13 +239,17 @@ class DropDownState extends State<DropDown> {
     prefs.setString("currentUrl",
         "api/Feed/GetReviewedArticles?SelectedArticles=$selectedArticles&UserId=$uid&FromDate=$FromDate&ToDate=$ToDate&PageNumber=");
     prefs.setInt("currentPage", int.parse(pageNumber));
-    var feedItems = new List<dynamic>();
-    feedItems = json.decode(response.body);
-    prefs.setInt("totalPage", feedItems[0]["count"]);
-    feedItems = feedItems[0]["feedItemViewModel"];
-    print("After Print");
-    print(feedItems);
-    widget.dropFilter(feedItems);
+    if (response.statusCode == 200) {
+      var feedItems = new List<dynamic>();
+      feedItems = json.decode(response.body);
+      prefs.setInt("totalPage", feedItems[0]["count"]);
+      feedItems = feedItems[0]["feedItemViewModel"];
+      print("After Print");
+      print(feedItems);
+      widget.dropFilter(feedItems);
+    } else {
+      Get.offAll(Home());
+    }
 
     // return response;
   }

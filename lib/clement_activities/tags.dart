@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:newstuck/clement_activities/validToken.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:http/http.dart' as http;
 import 'package:newstuck/clement_activities/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import "package:newstuck/clement_activities/home.dart";
 class TagBuild extends StatefulWidget {
   var feed = new Map<String, dynamic>();
   TagBuild(this.feed);
@@ -88,6 +89,8 @@ class _TagBuild extends State<TagBuild> {
 
     if (response.statusCode == 200) {
       print("Post Tag Updated");
+    }else{
+      Get.offAll(Home());
     }
   }
 
@@ -143,6 +146,8 @@ class _TagBuild extends State<TagBuild> {
             new List<RoundedLoadingButtonController>.generate(tagItems.length,
                 (index) => new RoundedLoadingButtonController());
       });
+    }else{
+      Get.offAll(Home());
     }
     //
     //print("Hello");
