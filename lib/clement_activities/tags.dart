@@ -126,7 +126,10 @@ class _TagBuild extends State<TagBuild> {
         print(widget.feed["seletedTags"].runtimeType);
         print("BeforIf");
         
-        if(widget.feed["seletedTags"].isEmpty){
+        if(widget.feed["seletedTags"] == null){
+
+        }
+        else if(widget.feed["seletedTags"].isEmpty){
 
         }else{
           // print(widget.feed["selectedTags"].runtimeType);
