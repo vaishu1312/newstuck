@@ -50,7 +50,7 @@ class MyDashBoardState extends State<MyDashBoard> {
           if (response.statusCode == 200)
             {
               firstFeed = json.decode(response.body),
-              print(firstFeed),
+              //print(firstFeed),
               prefs.setInt("totalPage", firstFeed[0]["count"]),
               firstFeed = firstFeed[0]["feedItemViewModel"],
               dropFilter(firstFeed)
@@ -320,8 +320,8 @@ class MyDashBoardState extends State<MyDashBoard> {
     feedItems = json.decode(response.body);
     feedItems = feedItems[0]["feedItemViewModel"];
     prefs.setInt("totalPage", feedItems[0]["count"]);
-    print("After Print");
-    print(feedItems);
+    //("After Print");
+    //print(feedItems);
     dropFilter(feedItems);
     // return response;
   }
@@ -332,7 +332,7 @@ class MyDashBoardState extends State<MyDashBoard> {
     final prefs = await SharedPreferences.getInstance();
 
     String token = prefs.getString("token");
-    print(token);
+    //print(token);
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
@@ -352,8 +352,8 @@ class MyDashBoardState extends State<MyDashBoard> {
     prefs.setInt("totalPage", feedItems[0]["count"]);
     feedItems = feedItems[0]["feedItemViewModel"];
 
-    print("After Print");
-    print(feedItems);
+    //print("After Print");
+    //print(feedItems);
     dropFilter(feedItems);
 
     // return response;

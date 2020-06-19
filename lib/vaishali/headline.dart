@@ -51,19 +51,31 @@ class HeaderRowState extends State<HeaderRow> {
 
   @override
   Widget build(BuildContext context) {
-    var date_time = feedItem["publishDate"].split("T");
     bool dialog_response;
+    Map<int,String> week_day={1:'Mon',2:'Tue',3:'Wed',4:'Thu',5:'Fri',6:'Sat',7:'Sun'};
+
+    var date_time = feedItem["publishDate"].split("T"); 
+   var date_arr= date_time[0].split("-");
+   var date=new DateTime(int.parse(date_arr[0]),int.parse(date_arr[1]),int.parse(date_arr[2]));
+   //year,month,day
+   int n =date.weekday;
+   var idx = week_day.keys.firstWhere( (k) => (k==n) , orElse: () => null);
+   var day=week_day[idx];
 
     return Column(
       //mainAxisSize: MainAxisSize.min,
       children: [
         ListTile(
           title: MyLink(feedItem["title"], feedItem["href"]),
-          subtitle: Text(date_time[0] +
-              " | " +
+          subtitle: Text(day+" "+date_arr[2]+" "+date_arr[1]+" "+date_arr[0]+" | " +
               date_time[1] +
               " | " +
               feedItem["category"]),
+          /*Text(date_time[0] +
+              " | " +
+              date_time[1] +
+              " | " +
+              feedItem["category"]),*/
           trailing: ClipOval(
             child: Material(
               color: (isPressed)
