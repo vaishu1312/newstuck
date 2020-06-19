@@ -126,10 +126,10 @@ class HeaderRowState extends State<HeaderRow> {
           ),
         ),
         isPressed
-            ? SizedBox(height: 200.0, child: rankBar())
+            ? SizedBox(height: 200.0, child: rankBar(widget.feed))
             : Container(height: 0),
         isPressed
-            ? SizedBox(height: 200.0, child: TagBuild())
+            ? SizedBox(height: 200.0, child: TagBuild(widget.feed))
             : Container(height: 0),
       ],
     );

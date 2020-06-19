@@ -33,7 +33,8 @@ class MyDashBoardState extends State<MyDashBoard> {
   var isToggleSelected = false;
   var firstFeed = new List<dynamic>();
   var filterText = "Last 24 hours";
-  bool load = false;
+  bool load = true;
+  var totalPages;
   ScrollController _scrollController = new ScrollController();
   var prefs;
   void setText(String text) {
@@ -44,7 +45,6 @@ class MyDashBoardState extends State<MyDashBoard> {
 
   @override
   void initState() {
-    super.initState();
     initSP();
     filter('Last 24 hours', false).then((response) => {
           if (response.statusCode == 200)
@@ -58,6 +58,7 @@ class MyDashBoardState extends State<MyDashBoard> {
         });
 
     _scrollController.addListener(() => scrollListener());
+    super.initState();
   }
 
   void initSP() async {
@@ -85,6 +86,9 @@ class MyDashBoardState extends State<MyDashBoard> {
       print("Success16");
       if (rem > 0) {
         TotalPages = TotalPages + 1;
+        setState(() {
+          totalPage = TotalPages;
+        });
       }
       print("TotalPages : $TotalPages");
       print("Success7");
@@ -126,7 +130,13 @@ class MyDashBoardState extends State<MyDashBoard> {
 
   void appendFeed(feeditems) {
     setState(() {
+      load = true;
+    });
+    setState(() {
       feedItems.addAll(feeditems);
+    });
+    setState(() {
+      load = false;
     });
   }
 
@@ -136,16 +146,23 @@ class MyDashBoardState extends State<MyDashBoard> {
     print("dropFilter : " + feeditems.length.toString());
     setState(() {
       feedItems.clear();
+      load = true;
     });
     if (feedItems.length == 0) {
-      Timer(Duration(seconds: 2),()=>{
-      setState(() {
-        feedItems = feeditems;
-        // print("After SetState");
-        // print(feedItems);
-      })
-      });
+      Timer(
+          Duration(seconds: 2),
+          () => {
+                setState(() {
+                  feedItems = feeditems;
+
+                  // print("After SetState");
+                  // print(feedItems);
+                }),
+              });
     }
+    setState(() {
+      load = false;
+    });
   }
 
   void onToggleSelected(val) {
@@ -230,7 +247,6 @@ class MyDashBoardState extends State<MyDashBoard> {
                   ]),
                 ],
               )),
-              
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
@@ -238,11 +254,18 @@ class MyDashBoardState extends State<MyDashBoard> {
               shrinkWrap: true,
               itemCount: feedItems.length + 1,
               itemBuilder: (context, index) {
-                if(index == feedItems.length){
-                return CupertinoActivityIndicator(
-                  radius: 20,
-                );
-              }
+                if (index == feedItems.length) {
+                  // print("Before Current Page");
+                  // print(prefs.getInt("currentPage"));
+                  // if (prefs.getInt("currentPage") == totalPages) {
+                  //   print("ContainerSuccess");
+                  //   return Container(height: 0);
+                  // }
+                  return CupertinoActivityIndicator(
+                    radius: 20,
+                  );
+                }
+
                 return Container(
                   //height: h - CustomAppBar().preferredSize.height - (h * 0.15),
                   padding: EdgeInsets.all(10.0),

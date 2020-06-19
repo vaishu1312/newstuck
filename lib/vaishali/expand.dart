@@ -22,8 +22,8 @@ class ExpandRowState extends State<ExpandRow> {
       children: [
         Column(
           children: [
-            SizedBox(height:200.0,child:rankBar()),
-            SizedBox(height:200.0,child:TagBuild())
+            // SizedBox(height:200.0,child:rankBar()),
+            // SizedBox(height:200.0,child:TagBuild())
           ],
         ),
       ],
