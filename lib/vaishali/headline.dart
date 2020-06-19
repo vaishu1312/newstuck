@@ -53,21 +53,25 @@ class HeaderRowState extends State<HeaderRow> {
   Widget build(BuildContext context) {
     bool dialog_response;
     Map<int,String> week_day={1:'Mon',2:'Tue',3:'Wed',4:'Thu',5:'Fri',6:'Sat',7:'Sun'};
+    Map<int,String> month_val ={1:'Jan',2:'Feb',3:'Mar',4:'Apr',5:'May',6:'Jun',7:'Jul',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'};
 
     var date_time = feedItem["publishDate"].split("T"); 
    var date_arr= date_time[0].split("-");
    var date=new DateTime(int.parse(date_arr[0]),int.parse(date_arr[1]),int.parse(date_arr[2]));
    //year,month,day
    int n =date.weekday;
+   int m= date.month;
    var idx = week_day.keys.firstWhere( (k) => (k==n) , orElse: () => null);
+   var mon_idx= month_val.keys.firstWhere( (k) => (k==m) , orElse: () => null);
    var day=week_day[idx];
+   var month =week_day[mon_idx];
 
     return Column(
       //mainAxisSize: MainAxisSize.min,
       children: [
         ListTile(
           title: MyLink(feedItem["title"], feedItem["href"]),
-          subtitle: Text(day+" "+date_arr[2]+" "+date_arr[1]+" "+date_arr[0]+" | " +
+          subtitle: Text(day+" "+month+" "+date_arr[1]+" "+date_arr[0]+" | " +
               date_time[1] +
               " | " +
               feedItem["category"]),

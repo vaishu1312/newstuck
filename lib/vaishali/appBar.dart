@@ -18,7 +18,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class CustomAppBarState extends State<CustomAppBar> {
   List<String> options = <String>[
-    'Role',
+    'Curator',
     'Name',
     'Email',
     'Change password',
@@ -73,7 +73,7 @@ class CustomAppBarState extends State<CustomAppBar> {
                     Text(
                       choice,
                       style: TextStyle(
-                          color: Color(0xFF9a2424),
+                          color: (options.indexOf(choice)==3 || options.indexOf(choice)==4) ? Color(0xFF9a2424):Colors.black,
                           fontSize: 14,
                           fontWeight: FontWeight.bold),
                     ),
