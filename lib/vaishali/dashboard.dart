@@ -2,8 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:newstuck/clement_activities/filters.dart';
+import 'package:newstuck/clement_activities/validToken.dart';
+
 import 'package:newstuck/vaishali/appBar.dart';
 //import 'package:newstuck/vaishali/dropdown.dart';
 import 'package:newstuck/vaishali/toggle.dart';
@@ -108,6 +111,7 @@ class MyDashBoardState extends State<MyDashBoard> {
   }
 
   void getRemainingFeed(String url, String pageNo) async {
+    checkTokenValid();
     print("Function Called");
     String token = prefs.getString("token");
     print(token);
@@ -163,6 +167,7 @@ class MyDashBoardState extends State<MyDashBoard> {
     setState(() {
       load = false;
     });
+    
   }
 
   void onToggleSelected(val) {
@@ -298,6 +303,7 @@ class MyDashBoardState extends State<MyDashBoard> {
   }
 
   void getFeed() async {
+    checkTokenValid();
     http.Response response;
     final prefs = await SharedPreferences.getInstance();
 
@@ -334,6 +340,7 @@ class MyDashBoardState extends State<MyDashBoard> {
 
   void filterfeedCurrent(String FromDate, String pageNumber,
       bool selectedArticles, String ToDate) async {
+        checkTokenValid();
     http.Response response;
     final prefs = await SharedPreferences.getInstance();
 
@@ -365,6 +372,7 @@ class MyDashBoardState extends State<MyDashBoard> {
 
   void filterfeedreviewCurrent(String FromDate, String pageNumber,
       bool selectedArticles, String ToDate) async {
+        checkTokenValid();
     http.Response response;
     final prefs = await SharedPreferences.getInstance();
 

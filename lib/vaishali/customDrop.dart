@@ -6,6 +6,7 @@ import 'package:newstuck/clement_activities/const.dart';
 import 'package:newstuck/clement_activities/filters.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
+import 'package:newstuck/clement_activities/validToken.dart';
 
 class CustomDropdown extends StatefulWidget {
   final Function(List<dynamic>) dropFilter;
@@ -172,8 +173,10 @@ class DropDown extends StatefulWidget {
 }
 
 class DropDownState extends State<DropDown> {
+  
   void filterfeedCurrent(String FromDate, String pageNumber,
       bool selectedArticles, String ToDate) async {
+        checkTokenValid();
     http.Response response;
     final prefs = await SharedPreferences.getInstance();
 
@@ -207,6 +210,7 @@ class DropDownState extends State<DropDown> {
 
   void filterfeedreviewCurrent(String FromDate, String pageNumber,
       bool selectedArticles, String ToDate) async {
+        checkTokenValid();
     http.Response response;
     final prefs = await SharedPreferences.getInstance();
 

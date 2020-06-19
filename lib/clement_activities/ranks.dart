@@ -4,6 +4,7 @@ import 'package:dropdownfield/dropdownfield.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:newstuck/clement_activities/const.dart';
+import 'package:newstuck/clement_activities/validToken.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class rankBar extends StatefulWidget {
@@ -100,6 +101,7 @@ class _rankBar extends State<rankBar> {
   }
 
   void getRanks() async {
+    checkTokenValid();
     final prefs = await SharedPreferences.getInstance();
 
     String token = prefs.getString("token");
@@ -124,6 +126,7 @@ class _rankBar extends State<rankBar> {
   }
 
   void UpdateFeed(int dimensionId, int dimensionRank, int feedItemId) async {
+    checkTokenValid();
     print(
         "The DimensionId is : $dimensionId with Rank : $dimensionRank of the feed : $feedItemId");
 

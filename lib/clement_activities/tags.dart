@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:newstuck/clement_activities/validToken.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:http/http.dart' as http;
 import 'package:newstuck/clement_activities/const.dart';
@@ -61,6 +62,7 @@ class _TagBuild extends State<TagBuild> {
   }
 
   void updateTag(int feedItemId, int tagId, bool isTagExist) async {
+    checkTokenValid();
     print(
         "The FeedItem with Id :$feedItemId and tag Selected : $tagId with bool value : $isTagExist");
     final prefs = await SharedPreferences.getInstance();
@@ -102,6 +104,7 @@ class _TagBuild extends State<TagBuild> {
   }
 
   void getTags() async {
+    checkTokenValid();
     final prefs = await SharedPreferences.getInstance();
 
     String token = prefs.getString("token");

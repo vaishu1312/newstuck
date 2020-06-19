@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:newstuck/clement_activities/const.dart';
+import 'package:newstuck/clement_activities/validToken.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
@@ -188,6 +189,8 @@ Future<dynamic> filter(String text, bool selectedArticles) {
 
 Future<http.Response> filterfeed(String FromDate, String pageNumber,
     bool selectedArticles, String ToDate) async {
+  
+  checkTokenValid();
   http.Response response;
   final prefs = await SharedPreferences.getInstance();
 
@@ -214,6 +217,7 @@ Future<http.Response> filterfeed(String FromDate, String pageNumber,
 
 Future<http.Response> filterfeedreview(String FromDate, String pageNumber,
     bool selectedArticles, String ToDate) async {
+      checkTokenValid();
   http.Response response;
   final prefs = await SharedPreferences.getInstance();
 

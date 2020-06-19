@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:newstuck/clement_activities/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,8 +29,7 @@ class _Home extends State<Home> {
     map["password"] = "";
   }
 
-
- final uri =  returnDomain()+"Users/Login";
+  final uri = returnDomain() + "Users/Login";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -208,8 +208,17 @@ class _Home extends State<Home> {
     } else {
       // print(user);
       final prefs = await SharedPreferences.getInstance();
-      prefs.setString("u_id",user["id"]);
-      prefs.setString("token",user["token"]);
+      prefs.setString("u_id", user["id"]);
+      prefs.setString("token", user["token"]);
+      prefs.setString("tokenValid", user["validTo"]);
+      var validDate = DateTime.parse(user["validTo"]);
+      print("Valid Date is $validDate");
+      if (DateTime.now().toUtc().isAfter(validDate)) {
+        print("Token Invalid");
+      }else{
+        print("Token Valid");
+        
+      }
       return true;
     }
     return false;
