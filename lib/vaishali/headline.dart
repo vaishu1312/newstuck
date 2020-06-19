@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:newstuck/clement_activities/validToken.dart';
 import 'package:newstuck/vaishali/webview.dart';
 import 'package:newstuck/clement_activities/ranks.dart';
 import 'package:newstuck/clement_activities/tags.dart';
@@ -6,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:newstuck/clement_activities/const.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:newstuck/clement_activities/home.dart';
 
 class HeaderRow extends StatefulWidget {
   var feed = new Map<String, dynamic>();
@@ -27,6 +30,7 @@ class HeaderRowState extends State<HeaderRow> {
   }
 
   void updateReview(int feed_id, bool isDel) async {
+    checkTokenValid();
     http.Response response;
     final prefs = await SharedPreferences.getInstance();
     String uid = prefs.getString("u_id");
@@ -47,6 +51,11 @@ class HeaderRowState extends State<HeaderRow> {
       body: json.encode(body_map),
       headers: requestHeaders,
     );
+    if(response.statusCode == 200){
+
+    }else{
+      Get.offAll(Home());
+    }
   }
 
   @override
