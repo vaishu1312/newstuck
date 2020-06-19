@@ -249,22 +249,8 @@ class MyDashBoardState extends State<MyDashBoard> {
                   color: Color(0xFF9a2424),
                   child: Card(
                     //child: ExpandRow(),
-                    child: HeaderRow(feedItems[index]),
+                    child: HeaderRow(feedItems[index],isToggleSelected),
                   ),
-
-                  /*margin: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-                      child: Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Column(
-                            children: [
-                              HeaderRow(feedItems[index]),
-                              //Expanded(flex: 1, child: HeaderRow()),
-                              Expanded(flex: 1, child: rankBar()),
-                              Expanded(flex: 1, child: TagBuild()),
-                              //rankBar(),
-                              //TagBuild(),
-                            ],
-                          ))),*/
                 );
               },
             ),

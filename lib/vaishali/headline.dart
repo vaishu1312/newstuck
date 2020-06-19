@@ -9,20 +9,21 @@ import 'dart:convert';
 
 class HeaderRow extends StatefulWidget {
   var feed = new Map<String, dynamic>();
-  HeaderRow(this.feed);
+  bool default_open;
+  HeaderRow(this.feed,this.default_open);
   @override
   State<StatefulWidget> createState() => HeaderRowState();
 }
 
 class HeaderRowState extends State<HeaderRow> {
-  bool isPressed = false;
+  bool isPressed;
   var feedItem = new Map<String, dynamic>();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     feedItem = widget.feed;
+    isPressed=widget.default_open;
   }
 
   void updateReview(int feed_id, bool isDel) async {
