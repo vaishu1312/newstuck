@@ -73,14 +73,14 @@ class HeaderRowState extends State<HeaderRow> {
    var idx = week_day.keys.firstWhere( (k) => (k==n) , orElse: () => null);
    var mon_idx= month_val.keys.firstWhere( (k) => (k==m) , orElse: () => null);
    var day=week_day[idx];
-   var month =week_day[mon_idx];
+   var month =month_val[mon_idx];
 
     return Column(
       //mainAxisSize: MainAxisSize.min,
       children: [
         ListTile(
           title: MyLink(feedItem["title"], feedItem["href"]),
-          subtitle: Text(day+" "+month+" "+date_arr[1]+" "+date_arr[0]+" | " +
+          subtitle: Text(day+" "+month+" "+date_arr[2]+" "+date_arr[0]+" | " +
               date_time[1] +
               " | " +
               feedItem["category"]),
