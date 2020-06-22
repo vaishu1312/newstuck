@@ -1,3 +1,10 @@
 {
+<<<<<<< HEAD
     "appService.deploySubpath": "."
+=======
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ]
+>>>>>>> a92e4e46ab4919366f4390fae04754548049ad4e
 }
