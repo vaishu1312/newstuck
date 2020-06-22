@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:newstuck/clement_activities/validToken.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:newstuck/clement_activities/const.dart';
 import 'package:newstuck/clement_activities/home.dart';
 import 'dart:convert';
+import 'package:get/get.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String appTitle = "NEWSTUCK";
@@ -34,15 +36,16 @@ class CustomAppBarState extends State<CustomAppBar> {
       'Accept': 'application/json',
       "Authorization": "Bearer " + token
     };
+    checkTokenValid();
     http.Response response = await http.get(uri, headers: requestHeaders);
     var user_details = new Map<String, dynamic>();
-    user_details = json.decode(response.body);
-    print('Details:****************');
-    //options[1]=role
-    options[1] = user_details["userName"];
-    options[2] = user_details["email"];
-    print(user_details["userName"]);
-    print(user_details["email"]);
+    if (response.statusCode == 200) {
+      user_details = json.decode(response.body);
+      //options[1]=role
+      options[1] = user_details["userName"];
+      options[2] = user_details["email"];
+    } else
+      Get.offAll(Home());
   }
 
   @override
@@ -64,16 +67,22 @@ class CustomAppBarState extends State<CustomAppBar> {
         PopupMenuButton(
           itemBuilder: (context) {
             return options.map((choice) {
-              return PopupMenuItem(                
-                enabled: (options.indexOf(choice)==3 || options.indexOf(choice)==4) ? true:false,                
+              return PopupMenuItem(
+                enabled: (options.indexOf(choice) == 3 ||
+                        options.indexOf(choice) == 4)
+                    ? true
+                    : false,
                 value: options.indexOf(choice),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,                  
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
                       choice,
                       style: TextStyle(
-                          color: (options.indexOf(choice)==3 || options.indexOf(choice)==4) ? Color(0xFF9a2424):Colors.black,
+                          color: (options.indexOf(choice) == 3 ||
+                                  options.indexOf(choice) == 4)
+                              ? Color(0xFF9a2424)
+                              : Colors.black,
                           fontSize: 14,
                           fontWeight: FontWeight.bold),
                     ),

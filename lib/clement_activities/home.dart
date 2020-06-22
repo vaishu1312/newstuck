@@ -213,14 +213,34 @@ class _Home extends State<Home> {
       prefs.setString("tokenValid", user["validTo"]);
       var validDate = DateTime.parse(user["validTo"]);
       print("Valid Date is $validDate");
+
+      var today = DateTime.now().toLocal();
+      Duration deadline = validDate.toLocal().difference(today);
+      print("Deadline is $deadline");
+      /*Future.delayed(Duration(minutes: 2), () {
+        print("inside deadline");
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => Home()),
+            (Route<dynamic> route) => false);
+      });*/
+
       if (DateTime.now().toUtc().isAfter(validDate)) {
         print("Token Invalid");
-      }else{
+      } else {
         print("Token Valid");
-        
       }
       return true;
     }
     return false;
   }
+
+  /*static void checkValidity(){
+    Future.delayed(Duration(milliseconds: 500), (){ 
+      Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => MyDashBoard()),
+                                (Route<dynamic> route) => false);
+
+    });
+}*/
 }

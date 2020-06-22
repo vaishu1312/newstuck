@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,21 +7,14 @@ import 'package:newstuck/clement_activities/filters.dart';
 import 'package:newstuck/clement_activities/validToken.dart';
 
 import 'package:newstuck/vaishali/appBar.dart';
-//import 'package:newstuck/vaishali/dropdown.dart';
 import 'package:newstuck/vaishali/toggle.dart';
 import 'dart:convert';
 import 'package:newstuck/vaishali/customDrop.dart';
 import 'package:newstuck/vaishali/headline.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import 'package:newstuck/clement_activities/home.dart';
-//import 'package:newstuck/vaishali/expand.dart';
-
-import 'package:newstuck/clement_activities/ranks.dart';
-import 'package:newstuck/clement_activities/tags.dart';
 import 'package:http/http.dart' as http;
 import 'package:newstuck/clement_activities/const.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MyDashBoard extends StatefulWidget {
   MyDashBoard({Key key, this.title}) : super(key: key);
@@ -59,6 +51,9 @@ class MyDashBoardState extends State<MyDashBoard> {
               firstFeed = firstFeed[0]["feedItemViewModel"],
               dropFilter(firstFeed)
             }
+            else{
+              Get.offAll(Home())
+              }
         });
 
     _scrollController.addListener(() => scrollListener());
@@ -115,7 +110,7 @@ class MyDashBoardState extends State<MyDashBoard> {
     checkTokenValid();
     print("Function Called");
     String token = prefs.getString("token");
-    print(token);
+    //print(token);
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
@@ -149,9 +144,9 @@ class MyDashBoardState extends State<MyDashBoard> {
   }
 
   void dropFilter(feeditems) {
-    print("SMith Awesome 1");
+    //print("SMith Awesome 1");
     // print("Inside Drop Filter");
-    print("dropFilter : " + feeditems.length.toString());
+    //print("dropFilter : " + feeditems.length.toString());
     setState(() {
       feedItems.clear();
     });
@@ -164,9 +159,6 @@ class MyDashBoardState extends State<MyDashBoard> {
           () => {
                 setState(() {
                   feedItems = feeditems;
-
-                  // print("After SetState");
-                  // print(feedItems);
                 }),
               });
     }
@@ -176,43 +168,46 @@ class MyDashBoardState extends State<MyDashBoard> {
   }
 
   void onToggleSelected(val) {
-    print("in dash selected");
-    print(val);
+    //print("in dash selected");
+    //print(val);
     setState(() {
       isToggleSelected = val;
     });
-    print(filterText);
-    print("SMith State Change");
+    //print(filterText);
+    //print("SMith State Change");
     print(filterText.contains("-"));
     if (filterText.contains("-") == false) {
       filter(filterText, isToggleSelected).then((response) => {
             if (response.statusCode == 200)
               {
                 firstFeed = json.decode(response.body),
-                print(firstFeed),
+                //print(firstFeed),
                 prefs.setInt("totalPage", firstFeed[0]["count"]),
                 firstFeed = firstFeed[0]["feedItemViewModel"],
-                print("Smith Awesome"),
+                //print("Smith Awesome"),
                 dropFilter(firstFeed)
+              }
+              else{
+                Get.offAll(Home())
               }
           });
     } else {
       DateTime date = DateTime.parse(filterText);
       print("After Parsing");
-      print(filterText);
+      //print(filterText);
       var formatter1 = new DateFormat('EEE, d MMM y 18:30:00 ');
       var subDt = date.toUtc().subtract(Duration(days: 1));
       subDt = subDt.add(Duration(days: 1));
       String formatted1 = formatter1.format(subDt);
       String FromDate = formatted1 + "GMT";
-      print(FromDate);
+      //print(FromDate);
       print("After Date Selected");
 
       var now = new DateTime.now();
       var formatter = new DateFormat('EEE MMM d y HH:mm:ss ');
       String ToDate = formatter.format(now);
       ToDate = ToDate + "GMT 0530 (India Standard Time)";
-      print(ToDate + "GMT 0530 (India Standard Time)");
+      //print(ToDate + "GMT 0530 (India Standard Time)");
 
       if (isToggleSelected) {
         filterfeedreviewCurrent(FromDate, "1", isToggleSelected, ToDate);
@@ -312,8 +307,8 @@ class MyDashBoardState extends State<MyDashBoard> {
       response = await http.get(returnDomain() + "api/Feed/GetFeedItems",
           headers: requestHeaders);
     }
-
-    setState(() {
+    if(response.statusCode==200){
+      setState(() {
       feedItems.clear();
     });
     setState(() {
@@ -321,6 +316,8 @@ class MyDashBoardState extends State<MyDashBoard> {
       feedItems = feedItems[0]["feedItemViewModel"];
       //print(feedItems);
     });
+    }
+    else Get.offAll(Home());    
   }
 
   void filterfeedCurrent(String FromDate, String pageNumber,

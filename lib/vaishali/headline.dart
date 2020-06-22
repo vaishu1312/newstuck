@@ -76,7 +76,6 @@ class HeaderRowState extends State<HeaderRow> {
    var month =month_val[mon_idx];
 
     return Column(
-      //mainAxisSize: MainAxisSize.min,
       children: [
         ListTile(
           title: MyLink(feedItem["title"], feedItem["href"]),
@@ -84,11 +83,6 @@ class HeaderRowState extends State<HeaderRow> {
               date_time[1] +
               " | " +
               feedItem["category"]),
-          /*Text(date_time[0] +
-              " | " +
-              date_time[1] +
-              " | " +
-              feedItem["category"]),*/
           trailing: ClipOval(
             child: Material(
               color: (isPressed)
